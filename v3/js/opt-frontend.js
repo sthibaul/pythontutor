@@ -292,6 +292,11 @@ $(document).ready(function() {
     return false;
   });
 
+  $("#helloExampleLink").click(function() {
+    $.get("example-code/hello.txt", setCodeMirrorVal);
+    return false;
+  });
+
   $("#aliasExampleLink").click(function() {
     $.get("example-code/aliasing.txt", setCodeMirrorVal);
     return false;
@@ -513,7 +518,7 @@ $(document).ready(function() {
   }
   else {
     // select a canned example on start-up:
-    $("#aliasExampleLink").trigger('click');
+    $("#helloExampleLink").trigger('click');
   }
 
   // ugh, ugly tristate due to the possibility of each being undefined

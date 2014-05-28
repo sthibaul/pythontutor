@@ -70,52 +70,52 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 <div id="pyInputPane">
 
-Write your Python code here:
+Écrire le code Python ici:
 <br/>
 
 <div id="codeInputPane"></div> <!-- populate with a CodeMirror instance -->
 
 <p style="margin-top: 10px; line-height: 200%;">
-Execute code using
-  <select id="pythonVersionSelector">
-    <option value="2">Python 2.7</option>
+  <select id="pythonVersionSelector" hidden=true>
     <option value="3">Python 3.3</option>
+    <option value="2">Python 2.7</option>
     <option value="2crazy">Py 2.crazy</option>
-  </select>,
-  <select id="cumulativeModeSelector">
+  </select>
+  <select id="cumulativeModeSelector" hidden=true>
     <option value="false">hide frames of exited functions</option>
     <option value="true">show frames of exited functions</option>
     <option value="holistic">holistic mode (experimental)</option>
-  </select>,
-  <select id="heapPrimitivesSelector">
+  </select>
+  <select id="heapPrimitivesSelector" hidden=true>
     <option value="false">inline primitives and nested objects</option>
     <option value="true">render all objects on the heap</option>
-  </select>,
-  <select id="drawParentPointerSelector">
+  </select>
+  <select id="drawParentPointerSelector" hidden=true>
     <option value="false">hide environment parent pointers</option>
     <option value="true">show environment parent pointers</option>
-  </select>,
-  <select id="textualMemoryLabelsSelector">
+  </select>
+  <select id="textualMemoryLabelsSelector" hidden=true>
     <option value="false">draw references using arrows</option>
     <option value="true">use text labels for references</option>
-  </select>, and
-  <select id="showOnlyOutputsSelector">
+  </select>
+  <select id="showOnlyOutputsSelector" hidden=true>
     <option value="false">show everything</option>
     <option value="true">show only outputs</option>
-  </select>.
+  </select>
 </p>
 
 <p>
-<button id="executeBtn" class="bigBtn" type="button">Visualize Execution</button>
-<button style="margin-left: 10px;" id="clearBtn" class="bigBtn" type="button">Clear</button>
+<button id="executeBtn" class="bigBtn" type="button">Lancer l'exécution</button>
+<button style="margin-left: 10px;" id="clearBtn" class="bigBtn" type="button">Effacer</button>
 </p>
 
 
+<!--
 <p style="margin-top: 25px;">Here are some example Python code snippets to visualize:</p>
 
 <p style="margin-top: 10px;">Basic:
 
-<a id="aliasExampleLink" href="#">hello</a> |
+<a id="helloExampleLink" href="#">hello</a> |
 <a id="happyExampleLink" href="#">happy</a> |
 <a id="tutorialExampleLink" href="#">intro</a> |
 <a id="filterExampleLink" href="#">filter</a> |
@@ -174,7 +174,9 @@ Execute code using
 <a id="closure4Link" href="#">closure 4</a> |
 <a id="closure5Link" href="#">closure 5</a>
 <br/>
+-->
 <!-- <a id="sumCubesLink" href="#">sum cubes</a> | -->
+<!--
 <a id="mapExampleLink" href="#">list map</a> |
 <a id="sumExampleLink" href="#">summation</a> |
 <a id="lambdaParamLink" href="#">lambda param</a> |
@@ -208,6 +210,7 @@ rendering</a> (experimental code by
 <a id="cmFibLink" href="#">fib</a>
 
 </p>
+-->
 
 </div>
 
@@ -215,6 +218,7 @@ rendering</a> (experimental code by
 <div id="pyOutputPane">
 </div>
 
+<!--
 <div id="footer">
 
 <p>
@@ -268,11 +272,13 @@ href="https://groups.google.com/forum/#!forum/pythontutor-announce">pythontutor-
 to receive occasional announcements.
 (Your name and email address will be kept private; only the list owner can see them.)</p>
 
+
 <p style="margin-top: 8px;">
 Copyright &copy; 2010-2013 <a href="http://www.pgbovine.net/">Philip Guo</a>.  All rights reserved.
 </p>
 
 </div>
+-->
 
 </body>
 </html>

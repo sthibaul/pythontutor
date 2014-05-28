@@ -230,7 +230,7 @@ $(document).ready(function() {
   }
   else {
     // select a canned example on start-up:
-    $("#aliasExampleLink").trigger('click');
+    $("#helloExampleLink").trigger('click');
   }
 
   // ugh, ugly tristate due to the possibility of each being undefined

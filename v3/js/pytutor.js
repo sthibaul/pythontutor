@@ -266,14 +266,14 @@ ExecutionVisualizer.prototype.render = function() {
   var codeDisplayHTML =
     '<div id="codeDisplayDiv">\
        <div id="pyCodeOutputDiv"/>\
-       <div id="editCodeLinkDiv"><a id="editBtn">Edit code</a></div>\
+       <div id="editCodeLinkDiv"><a id="editBtn">Éditer le code</a></div>\
        <div id="executionSlider"/>\
        <div id="vcrControls">\
-         <button id="jmpFirstInstr", type="button">&lt;&lt; First</button>\
-         <button id="jmpStepBack", type="button">&lt; Back</button>\
-         <span id="curInstr">Step ? of ?</span>\
-         <button id="jmpStepFwd", type="button">Forward &gt;</button>\
-         <button id="jmpLastInstr", type="button">Last &gt;&gt;</button>\
+         <button id="jmpFirstInstr", type="button">&lt;&lt; Début</button>\
+         <button id="jmpStepBack", type="button">&lt; Arrière</button>\
+         <span id="curInstr">Étape ? sur ?</span>\
+         <button id="jmpStepFwd", type="button">Avant &gt;</button>\
+         <button id="jmpLastInstr", type="button">Fin &gt;&gt;</button>\
        </div>\
        <div id="errorOutput"/>\
        <div id="legendDiv"/>\
@@ -297,13 +297,13 @@ ExecutionVisualizer.prototype.render = function() {
          <tr>\
            <td id="stack_td">\
              <div id="globals_area">\
-               <div id="stackHeader">Frames</div>\
+	     <div id="stackHeader">Variables</div>\
              </div>\
              <div id="stack"></div>\
            </td>\
            <td id="heap_td">\
              <div id="heap">\
-               <div id="heapHeader">Objects</div>\
+               <div id="heapHeader">Objets</div>\
              </div>\
            </td>\
          </tr>\
@@ -346,8 +346,8 @@ ExecutionVisualizer.prototype.render = function() {
 
   if (this.params.arrowLines) {
       this.domRoot.find('#legendDiv')
-          .append('<svg id="prevLegendArrowSVG"/> line that has just executed')
-          .append('<p style="margin-top: 4px"><svg id="curLegendArrowSVG"/> next line to execute</p>');
+          .append('<svg id="prevLegendArrowSVG"/> ligne qui vient d\'être exécutée')
+	  .append('<p style="margin-top: 4px"><svg id="curLegendArrowSVG"/> prochaine ligne à exécuter</p>');
       
       myViz.domRootD3.select('svg#prevLegendArrowSVG')
           .append('polygon')
@@ -479,7 +479,7 @@ ExecutionVisualizer.prototype.render = function() {
   // (note that we need to keep #globals_area separate from #stack for d3 to work its magic)
   this.domRoot.find("#globals_area").append('<div class="stackFrame" id="'
     + myViz.generateID('globals') + '"><div id="' + myViz.generateID('globals_header')
-    + '" class="stackFrameHeader">Global frame</div><table class="stackFrameVarTable" id="'
+    + '" class="stackFrameHeader">Variables globales</div><table class="stackFrameVarTable" id="'
     + myViz.generateID('global_table') + '"></table></div>');
 
 
@@ -1312,13 +1312,13 @@ ExecutionVisualizer.prototype.updateOutputFull = function(smoothTransition) {
       vcrControls.find("#curInstr").html("Instruction limit reached");
     }
     else {
-      vcrControls.find("#curInstr").html("Program terminated");
+      vcrControls.find("#curInstr").html("Programme terminé");
     }
   }
   else {
-    vcrControls.find("#curInstr").html("Step " +
+    vcrControls.find("#curInstr").html("Étape " +
                                        String(this.curInstr + 1) +
-                                       " of " + String(totalInstrs-1));
+                                       " sur " + String(totalInstrs-1));
   }
 
 
@@ -2472,7 +2472,7 @@ ExecutionVisualizer.prototype.renderDataStructures = function(curEntry, curTople
       var parentFrameID = obj[2]; // optional
 
       if (!myViz.compactFuncLabels) {
-        d3DomElement.append('<div class="typeLabel">' + typeLabelPrefix + 'function</div>');
+        d3DomElement.append('<div class="typeLabel">' + typeLabelPrefix + 'fonction</div>');
       }
 
       var funcPrefix = myViz.compactFuncLabels ? 'func' : '';
@@ -2816,7 +2816,7 @@ ExecutionVisualizer.prototype.renderDataStructures = function(curEntry, curTople
 
       if (i == 0) {
         if (varname == '__return__')
-          $(this).html('<span class="retval">Return<br/>value</span>');
+	    $(this).html('<span class="retval">Valeur<br/>retournée</span>');
         else
           $(this).html(varname);
       }
