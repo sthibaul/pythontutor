@@ -298,10 +298,10 @@ class ObjectEncoder:
         # don't traverse inside modules, or else risk EXPLODING the visualization
         if class_name == 'module': # or class_name == 'PngImageFile':
           return
-        if class_name == 'PngImageFile':
-          for attr in ["filename", "mode"]:
-            new_obj.append([self.encode(attr, None), self.encode(dat.__dict__[attr], None)])
-          new_obj.append([self.encode("im_size", None), self.encode(dat.__dict__["png"].__dict__["im_size"], None)])
+        if class_name[-9:] == 'ImageFile' or class_name == "Image":
+          for attr in ["mode", "size"]:
+            if attr in dat.__dict__:
+              new_obj.append([self.encode(attr, None), self.encode(dat.__dict__[attr], None)])
           return
     else:
       superclass_names = [e.__name__ for e in dat.__bases__ if e is not object]
