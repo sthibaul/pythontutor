@@ -2499,7 +2499,6 @@ ExecutionVisualizer.prototype.renderDataStructures = function(curEntry, curTople
       assert(obj.length == 5);
       d3DomElement.append('<div class="typeLabel">Image ' + typeLabelPrefix + obj[1] + '</div>');
 
-      strRepr = htmlspecialchars(obj[4]); // escape strings!
       d3DomElement.append('<table class="customObjTbl"><tr><td class="customObjElt">' + obj[2] + " " + obj[3] + '<br/><img src="data:' + obj[4] + '"/></td></tr></table>');
     }
     else {
