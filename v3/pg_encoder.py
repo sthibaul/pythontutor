@@ -57,6 +57,7 @@
 #   * instance with __str__ defined - ['INSTANCE_PPRINT', class name, <__str__ value>]
 #   * class    - ['CLASS', class name, [list of superclass names], [attr1, value1], [attr2, value2], ..., [attrN, valueN]]
 #   * function - ['FUNCTION', function name, parent frame ID (for nested functions)]
+#   * image    - ['IMAGE', filename, mode, (width, height), content as string]
 #   * module   - ['module', module name]
 #   * other    - [<type name>, string representation of object]
 #   * compound object reference - ['REF', target object's unique_id]
@@ -71,6 +72,9 @@ FLOAT_PRECISION = 4
 import re, types
 import sys
 import math
+import base64
+from PIL import Image
+import StringIO
 typeRE = re.compile("<type '(.*)'>")
 classRE = re.compile("<class '(.*)'>")
 
@@ -294,14 +298,21 @@ class ObjectEncoder:
         new_obj.extend(['INSTANCE_PPRINT', class_name, pprint_str])
         return # bail early
       else:
+        if class_name[-9:] == 'ImageFile' or class_name == "Image":
+          new_obj.append('IMAGE')
+          if "filename" in dat.__dict__:
+            new_obj.append(dat.__dict__["filename"])
+          else:
+            new_obj.append("sans nom")
+          new_obj.append(dat.__dict__["mode"])
+          new_obj.append(dat.__dict__["size"])
+          s = StringIO.StringIO()
+          dat.save(s, "png")
+          new_obj.append("data:image/png;base64," + base64.b64encode(s.getvalue()))
+          return
         new_obj.extend(['INSTANCE', class_name])
         # don't traverse inside modules, or else risk EXPLODING the visualization
         if class_name == 'module':
-          return
-        if class_name[-9:] == 'ImageFile' or class_name == "Image":
-          for attr in ["mode", "size"]:
-            if attr in dat.__dict__:
-              new_obj.append([self.encode(attr, None), self.encode(dat.__dict__[attr], None)])
           return
     else:
       superclass_names = [e.__name__ for e in dat.__bases__ if e is not object]
