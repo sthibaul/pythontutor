@@ -308,7 +308,7 @@ class ObjectEncoder:
           new_obj.append(dat.__dict__["size"])
           s = StringIO.StringIO()
           dat.save(s, "png")
-          new_obj.append("data:image/png;base64," + base64.b64encode(s.getvalue()))
+          new_obj.append("image/png;base64," + base64.b64encode(s.getvalue()))
           return
         new_obj.extend(['INSTANCE', class_name])
         # don't traverse inside modules, or else risk EXPLODING the visualization
