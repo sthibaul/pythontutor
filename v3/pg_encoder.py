@@ -296,7 +296,7 @@ class ObjectEncoder:
       else:
         new_obj.extend(['INSTANCE', class_name])
         # don't traverse inside modules, or else risk EXPLODING the visualization
-        if class_name == 'module': # or class_name == 'PngImageFile':
+        if class_name == 'module':
           return
         if class_name[-9:] == 'ImageFile' or class_name == "Image":
           for attr in ["mode", "size"]:
