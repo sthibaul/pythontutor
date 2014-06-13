@@ -140,7 +140,7 @@ $(document).ready(function() {
           backend_script = python2crazy_backend_script;
       }
 
-      $('#executeBtn').html("Please wait ... processing your code");
+      $('#executeBtn').html("Veuillez patienter... Traitement de votre code");
       $('#executeBtn').attr('disabled', true);
       $("#pyOutputPane").hide();
       $("#embedLinkDiv").hide();

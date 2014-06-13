@@ -132,7 +132,7 @@ $(document).ready(function() {
   function executeCode(forceStartingInstr) {
       backend_script = python3_backend_script; // Python 3.3
 
-      $('#executeBtn').html("Please wait ... processing your code");
+      $('#executeBtn').html("Veuillez patienter... Traitement de votre code");
       $('#executeBtn').attr('disabled', true);
       $("#pyOutputPane").hide();
       $("#embedLinkDiv").hide();

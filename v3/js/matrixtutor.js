@@ -150,7 +150,7 @@ $(document).ready(function() {
 
       var nCodeLines = inputCod.split('\n').length + 2;
 
-      $('#executeBtn').html("Please wait ... processing your code");
+      $('#executeBtn').html("Veuillez patienter... Traitement de votre code");
       $('#executeBtn').attr('disabled', true);
       $("#pyOutputPane,#gradingPane").hide();
       $("#embedLinkDiv").hide();
