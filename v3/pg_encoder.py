@@ -301,6 +301,18 @@ class ObjectEncoder:
 
         new_obj.extend(['INSTANCE_PPRINT', class_name, pprint_str])
         return # bail early
+
+      if hasattr(dat, '__repr__') and \
+         (not dat.__class__.__repr__ is object.__repr__): # make sure it's not the lame default __str__
+        # N.B.: when objects are being constructed, this call
+        # might fail since not all fields have yet been populated
+        try:
+          pprint_str = repr(dat)
+        except:
+          pprint_str = '<incomplete object>'
+
+        new_obj.extend(['INSTANCE_PPRINT', class_name, pprint_str])
+        return # bail early
       else:
         if class_name[-9:] == 'ImageFile' or class_name == "Image":
           new_obj.append('IMAGE')
