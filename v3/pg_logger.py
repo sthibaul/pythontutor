@@ -1230,11 +1230,11 @@ class PGLogger(bdb.Bdb):
             for a in dir(sys.modules['posix']):
               delattr(sys.modules['posix'], a)
             # do the same with os
-            for a in dir(sys.modules['os']):
-              # 'path' is needed for __restricted_import__ to work
-              # and 'stat' is needed for some errors to be reported properly
-              if a not in ('path', 'stat'):
-                delattr(sys.modules['os'], a)
+            #for a in dir(sys.modules['os']):
+            #  # 'path' is needed for __restricted_import__ to work
+            #  # and 'stat' is needed for some errors to be reported properly
+            #  if a not in ('path', 'stat','getenv','getpid','open','close','device_encoding','fsencode','isinstance'):
+            #    delattr(sys.modules['os'], a)
             # ppl can dig up trashed objects with gc.get_objects()
             import gc
             for a in dir(sys.modules['gc']):
