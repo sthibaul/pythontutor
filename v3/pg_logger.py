@@ -59,7 +59,7 @@ BREAKPOINT_STR = '#break'
 
 CLASS_RE = re.compile('class\s+')
 
-listeVariablesBibV3=["degre","colorierSommet","sommetVoisin","areteNumero","c_edge","voisinNumero","plateforme","demarquerSommet","tetraedre","marquerArete","fig22","subprocess","numeroterArete","nomSommet","dessiner","demarquerArete","icosaedre","octaedre","c_node","pathGraphviz","elementAleatoireListe","tgv2005","melange","dessinerGraphe","random","verif_type_chaine","dodecaedre","construireTriangle","verif_type_arete","verif_type_graphe","sommetNumero","verif_type_sommet","graphes","estMarqueeArete","construireComplet","graphesPlanairesReguliers","Koenigsberg","listeAretesIncidentes","Petersen","construireArbre","Europe","construireBipartiComplet","nomArete","couleurSommet","listeVoisins","construireGraphe","cube","platform","ErreurParametre","Graphviz","nomGraphe","construireGrille","hypercubeDim3","estMarqueSommet","nbSommets","glob","marquerSommet","sommetNom","c_graph","prefixer","listeSommets","dotify"]
+listeVariablesBibV3=["degre","colorierSommet","sommetVoisin","areteNumero","c_edge","voisinNumero","plateforme","demarquerSommet","tetraedre","marquerArete","fig22","subprocess","numeroterArete","nomSommet","dessiner","demarquerArete","icosaedre","octaedre","c_node","pathGraphviz","elementAleatoireListe","tgv2005","melange","dessinerGraphe","random","verif_type_chaine","dodecaedre","construireTriangle","verif_type_arete","verif_type_graphe","sommetNumero","verif_type_sommet","graphes","estMarqueeArete","construireComplet","graphesPlanairesReguliers","Koenigsberg","listeAretesIncidentes","Petersen","construireArbre","Europe","construireBipartiComplet","nomArete","couleurSommet","listeVoisins","construireGraphe","cube","platform","ErreurParametre","Graphviz","nomGraphe","construireGrille","hypercubeDim3","estMarqueSommet","nbSommets","glob","marquerSommet","sommetNom","c_graph","prefixer","listeSommets","dotify","tempfile","resource"]
 
 
 # simple sandboxing scheme:
@@ -1208,7 +1208,7 @@ class PGLogger(bdb.Bdb):
             resource.setrlimit(resource.RLIMIT_CPU, (5, 5))
 
             # protect against unauthorized filesystem accesses ...
-            resource.setrlimit(resource.RLIMIT_NOFILE, (0, 0)) # no opened files allowed
+            resource.setrlimit(resource.RLIMIT_NOFILE, (0, 4096)) # no opened files allowed
 
             # VERY WEIRD. If you activate this resource limitation, it
             # ends up generating an EMPTY trace for the following program:

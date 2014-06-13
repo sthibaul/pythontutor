@@ -1,4 +1,4 @@
-import os, platform, subprocess, random, glob, sys
+import os, platform, subprocess, random, glob, sys, resource, tempfile
 #from random import randrange
 
 # Attention, eviter que les deux noms globaux qui suivent
@@ -292,6 +292,10 @@ def _proteger (label):
 
 def dotify (G, etiquettesAretes = True, colormark = 'Black', suffixe = 'dot'):
 
+    (soft,maximum) = resource.getrlimit(resource.RLIMIT_NOFILE)
+    if soft == 0:
+        resource.setrlimit(resource.RLIMIT_NOFILE, (maximum,maximum))
+
     # graphe non oriente, il faut eviter de traiter chaque arete deux fois
     for s in G.nodes:
         for a in s.edges:
@@ -302,14 +306,10 @@ def dotify (G, etiquettesAretes = True, colormark = 'Black', suffixe = 'dot'):
     else:
         nom_graphe = G.label
 
-    graph_dot = 'tmp/' + nom_graphe + '.' + suffixe
-        
-    try:
-        f = open (graph_dot, 'w')
-    except IOError:
-        os.mkdir ('tmp')
-        f = open (graph_dot, 'w')
-        
+    (fd,graph_dot) = tempfile.mkstemp('.dot')
+    os.close(fd)
+    f = open (graph_dot, 'w')
+
     f.write ('graph ' + nom_graphe + '{\n' + G.drawopts + '\n')
 
     for s in G.nodes:
@@ -348,6 +348,8 @@ def dotify (G, etiquettesAretes = True, colormark = 'Black', suffixe = 'dot'):
             
     f.write ('}\n')
     f.close ()
+    if soft == 0:
+        resource.setrlimit(resource.RLIMIT_NOFILE, (0,maximum))
     return graph_dot
 
 # La fonction 'Graphviz' lance l'execution d'un programme
@@ -356,11 +358,16 @@ def dotify (G, etiquettesAretes = True, colormark = 'Black', suffixe = 'dot'):
 # en une image de nom 'racine.format' (peut-etre un fichier PostScript)
 
 def Graphviz (source, algo = 'dot', format = 'svg', suffixe = 'dot'):
+    (soft,maximum) = resource.getrlimit(resource.RLIMIT_NOFILE)
+    if soft == 0:
+        resource.setrlimit(resource.RLIMIT_NOFILE, (maximum,maximum))
     image = source.replace ('.' + suffixe, '.' + format)
     algo = pathGraphviz + algo
     if plateforme == 'Windows':
         algo = algo + '.exe'
     subprocess.call ([algo, '-T' + format, source, '-o', image])
+    if soft == 0:
+        resource.setrlimit(resource.RLIMIT_NOFILE, (0,maximum))
     return image
 
 # Enchaine dotify et Graphviz avec des arguments standard adaptes au systeme
@@ -378,6 +385,7 @@ def dessinerGraphe (G, etiquettesAretes = False, algo = 'dot', colormark = 'Blac
         return
 
     graph_dot = dotify (G, etiquettesAretes, colormark)
+    os.unlink(graph_dot)
     image = Graphviz (graph_dot, algo)
     if plateforme == 'Linux':
         #subprocess.call (['firefox', image])

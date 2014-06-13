@@ -70,13 +70,17 @@ FLOAT_PRECISION = 4
 
 
 import re, types
+import os
 import sys
 import math
 import base64
+import resource
+import tempfile
 from PIL import Image
 from PIL import PngImagePlugin
 typeRE = re.compile("<type '(.*)'>")
 classRE = re.compile("<class '(.*)'>")
+from bibV3 import *
 
 import inspect
 
@@ -289,6 +293,25 @@ class ObjectEncoder:
         # which is some weird 'PyCapsule' type ...
         # http://docs.python.org/release/3.1.5/c-api/capsule.html
         class_name = get_name(type(dat))
+
+      if class_name == "c_graph":
+        new_obj.append('IMAGE')
+        new_obj.append(nomGraphe(dat))
+        new_obj.append("")
+        new_obj.append("")
+        graph_dot = dotify(dat, False, "Black")
+        image = Graphviz(graph_dot, "dot")
+        os.unlink(graph_dot)
+        (soft,maximum) = resource.getrlimit(resource.RLIMIT_NOFILE)
+        if soft == 0:
+            resource.setrlimit(resource.RLIMIT_NOFILE, (maximum,maximum))
+        f = open(image,'r')
+        s = f.read()
+        if soft == 0:
+            resource.setrlimit(resource.RLIMIT_NOFILE, (0,maximum))
+        os.unlink(image)
+        new_obj.append("image/svg+xml;base64," + (base64.b64encode(s.encode("ASCII"))).decode("ASCII"))
+        return
 
       if class_name[-9:] == 'ImageFile' or class_name == "Image":
         new_obj.append('IMAGE')
