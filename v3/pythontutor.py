@@ -83,6 +83,6 @@ class ExecScript(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([('/', TutorPage),
                                ('/iframe-embed.html', IframeEmbedPage),
                                ('/lesson.html', LessonPage),
-                               ('/exec', ExecScript)],
+                               ('/web_exec.py', ExecScript)],
                               debug=True)
 
