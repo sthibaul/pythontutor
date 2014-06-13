@@ -74,7 +74,7 @@ import sys
 import math
 import base64
 from PIL import Image
-import io as cStringIO
+from PIL import PngImagePlugin
 typeRE = re.compile("<type '(.*)'>")
 classRE = re.compile("<class '(.*)'>")
 
@@ -85,6 +85,10 @@ is_python3 = (sys.version_info[0] == 3)
 if is_python3:
   long = None # Avoid NameError when evaluating "long"
 
+if is_python3:
+  from io import BytesIO as myIO
+else:
+  from StringIO import StringIO as myIO
 
 def is_class(dat):
   """Return whether dat is a class."""
@@ -306,10 +310,11 @@ class ObjectEncoder:
             new_obj.append("sans nom")
           new_obj.append(dat.__dict__["mode"])
           new_obj.append(dat.__dict__["size"])
-          s = cStringIO.StringIO()
+          s = myIO()
           dat.save(s, "png")
-          new_obj.append("image/png;base64," + base64.b64encode(s.getvalue()))
+          new_obj.append("image/png;base64," + (base64.b64encode(s.getvalue())).decode("ASCII"))
           return
+
         new_obj.extend(['INSTANCE', class_name])
         # don't traverse inside modules, or else risk EXPLODING the visualization
         if class_name == 'module':

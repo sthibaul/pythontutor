@@ -1,4 +1,7 @@
 #!/usr/bin/python
+
+
+#/usr/bin/python3
 # <INSERT YOUR VERSION OF PYTHON HERE AS A #! LINE>
 
 # Minimal CGI script for Online Python Tutor (v3), tested under Python 2 and 3
