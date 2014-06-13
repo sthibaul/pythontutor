@@ -20,7 +20,7 @@ import urllib3
 def index(filepath):
     return static_file(filepath, root='.')
 
-@get('/exec')
+@get('/web_exec.py')
 def get_exec():
   #out_s = cStringIO.StringIO()
   out_s = cStringIO()
