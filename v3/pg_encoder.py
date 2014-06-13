@@ -290,6 +290,19 @@ class ObjectEncoder:
         # http://docs.python.org/release/3.1.5/c-api/capsule.html
         class_name = get_name(type(dat))
 
+      if class_name[-9:] == 'ImageFile' or class_name == "Image":
+        new_obj.append('IMAGE')
+        if "filename" in dat.__dict__:
+          new_obj.append(dat.__dict__["filename"])
+        else:
+          new_obj.append("sans nom")
+        new_obj.append(dat.__dict__["mode"])
+        new_obj.append(dat.__dict__["size"])
+        s = myIO()
+        dat.save(s, "png")
+        new_obj.append("image/png;base64," + (base64.b64encode(s.getvalue())).decode("ASCII"))
+        return
+
       if hasattr(dat, '__str__') and \
          (not dat.__class__.__str__ is object.__str__): # make sure it's not the lame default __str__
         # N.B.: when objects are being constructed, this call
@@ -314,18 +327,6 @@ class ObjectEncoder:
         new_obj.extend(['INSTANCE_PPRINT', class_name, pprint_str])
         return # bail early
       else:
-        if class_name[-9:] == 'ImageFile' or class_name == "Image":
-          new_obj.append('IMAGE')
-          if "filename" in dat.__dict__:
-            new_obj.append(dat.__dict__["filename"])
-          else:
-            new_obj.append("sans nom")
-          new_obj.append(dat.__dict__["mode"])
-          new_obj.append(dat.__dict__["size"])
-          s = myIO()
-          dat.save(s, "png")
-          new_obj.append("image/png;base64," + (base64.b64encode(s.getvalue())).decode("ASCII"))
-          return
 
         new_obj.extend(['INSTANCE', class_name])
         # don't traverse inside modules, or else risk EXPLODING the visualization
