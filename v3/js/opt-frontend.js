@@ -100,7 +100,7 @@ $(document).ready(function() {
 
       $("#embedLinkDiv").show();
 
-      $('#executeBtn').html("Visualize Execution");
+      $('#executeBtn').html("Lancer l'exécution");
       $('#executeBtn').attr('disabled', false);
 
 
@@ -205,7 +205,7 @@ $(document).ready(function() {
             });
           }
 
-          $('#executeBtn').html("Visualize Execution");
+	  $('#executeBtn').html("Lancer l'exécution");
           $('#executeBtn').attr('disabled', false);
         }
       }
@@ -567,7 +567,7 @@ $(document).ready(function() {
           "Report a bug to philip@pgbovine.net\n\n" +
           "(Click the 'Generate URL' button to include a unique URL in your email bug report.)");
 
-    $('#executeBtn').html("Visualize Execution");
+    $('#executeBtn').html("Lancer l'exécution");
     $('#executeBtn').attr('disabled', false);
   });
 
