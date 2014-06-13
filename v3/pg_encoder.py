@@ -74,7 +74,7 @@ import sys
 import math
 import base64
 from PIL import Image
-import StringIO
+import io as cStringIO
 typeRE = re.compile("<type '(.*)'>")
 classRE = re.compile("<class '(.*)'>")
 
@@ -306,7 +306,7 @@ class ObjectEncoder:
             new_obj.append("sans nom")
           new_obj.append(dat.__dict__["mode"])
           new_obj.append(dat.__dict__["size"])
-          s = StringIO.StringIO()
+          s = cStringIO.StringIO()
           dat.save(s, "png")
           new_obj.append("image/png;base64," + base64.b64encode(s.getvalue()))
           return
