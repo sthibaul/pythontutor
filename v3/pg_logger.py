@@ -59,6 +59,8 @@ BREAKPOINT_STR = '#break'
 
 CLASS_RE = re.compile('class\s+')
 
+listeVariablesBibV3=["degre","colorierSommet","sommetVoisin","areteNumero","c_edge","voisinNumero","plateforme","demarquerSommet","tetraedre","marquerArete","fig22","subprocess","numeroterArete","nomSommet","dessiner","demarquerArete","icosaedre","octaedre","c_node","pathGraphviz","elementAleatoireListe","tgv2005","melange","dessinerGraphe","random","verif_type_chaine","dodecaedre","construireTriangle","verif_type_arete","verif_type_graphe","sommetNumero","verif_type_sommet","graphes","estMarqueeArete","construireComplet","graphesPlanairesReguliers","Koenigsberg","listeAretesIncidentes","Petersen","construireArbre","Europe","construireBipartiComplet","nomArete","couleurSommet","listeVoisins","construireGraphe","cube","platform","ErreurParametre","Graphviz","nomGraphe","construireGrille","hypercubeDim3","estMarqueSommet","nbSommets","glob","marquerSommet","sommetNom","c_graph","prefixer","listeSommets","dotify"]
+
 
 # simple sandboxing scheme:
 #
@@ -113,7 +115,7 @@ else:
 ALLOWED_STDLIB_MODULE_IMPORTS = ('math', 'random', 'datetime',
                           'functools', 'itertools', 'operator', 'string',
                           'collections', 're', 'json',
-                          'heapq', 'bisect', 'PIL.Image', 'PIL')
+                          'heapq', 'bisect', 'PIL.Image', 'PIL', 'bibV3')
 
 # whitelist of custom modules to import into OPT
 # (TODO: support modules in a subdirectory, but there are various
@@ -305,6 +307,10 @@ def get_user_globals(frame, at_global_scope=False):
   if not is_python3 and hasattr(frame, 'f_valuestack'):
     for (i, e) in enumerate([e for e in frame.f_valuestack if type(e) is list]):
       d['_tmp' + str(i+1)] = e
+
+  for s in listeVariablesBibV3:
+    if s in d:
+      del d[s]
 
   # also filter out __return__ for globals only, but NOT for locals
   if '__return__' in d:
