@@ -59,7 +59,7 @@ BREAKPOINT_STR = '#break'
 
 CLASS_RE = re.compile('class\s+')
 
-listeVariablesBibV3=["degre","colorierSommet","sommetVoisin","areteNumero","c_edge","voisinNumero","plateforme","demarquerSommet","tetraedre","marquerArete","fig22","subprocess","numeroterArete","nomSommet","dessiner","demarquerArete","icosaedre","octaedre","c_node","pathGraphviz","elementAleatoireListe","tgv2005","melange","dessinerGraphe","random","verif_type_chaine","dodecaedre","construireTriangle","verif_type_arete","verif_type_graphe","sommetNumero","verif_type_sommet","graphes","estMarqueeArete","construireComplet","graphesPlanairesReguliers","Koenigsberg","listeAretesIncidentes","Petersen","construireArbre","Europe","construireBipartiComplet","nomArete","couleurSommet","listeVoisins","construireGraphe","cube","platform","ErreurParametre","Graphviz","nomGraphe","construireGrille","hypercubeDim3","estMarqueSommet","nbSommets","glob","marquerSommet","sommetNom","c_graph","prefixer","listeSommets","dotify","tempfile","resource"]
+listeVariablesExclude=["degre","colorierSommet","sommetVoisin","areteNumero","c_edge","voisinNumero","plateforme","demarquerSommet","tetraedre","marquerArete","fig22","subprocess","numeroterArete","nomSommet","dessiner","demarquerArete","icosaedre","octaedre","c_node","pathGraphviz","elementAleatoireListe","tgv2005","melange","dessinerGraphe","random","verif_type_chaine","dodecaedre","construireTriangle","verif_type_arete","verif_type_graphe","sommetNumero","verif_type_sommet","graphes","estMarqueeArete","construireComplet","graphesPlanairesReguliers","Koenigsberg","listeAretesIncidentes","Petersen","construireArbre","Europe","construireBipartiComplet","nomArete","couleurSommet","listeVoisins","construireGraphe","cube","platform","ErreurParametre","Graphviz","nomGraphe","construireGrille","hypercubeDim3","estMarqueSommet","nbSommets","glob","marquerSommet","sommetNom","c_graph","prefixer","listeSommets","dotify","tempfile","resource","PngImagePlugin","PILLOW_VERSION", "ImageFile", "VERSION", "ImagePalette","ImageMode","ImageColor"]
 
 
 # simple sandboxing scheme:
@@ -308,7 +308,7 @@ def get_user_globals(frame, at_global_scope=False):
     for (i, e) in enumerate([e for e in frame.f_valuestack if type(e) is list]):
       d['_tmp' + str(i+1)] = e
 
-  for s in listeVariablesBibV3:
+  for s in listeVariablesExclude:
     if s in d:
       del d[s]
 
