@@ -326,6 +326,11 @@ class ObjectEncoder:
         new_obj.append("image/png;base64," + (base64.b64encode(s.getvalue())).decode("ASCII"))
         return
 
+      # don't traverse inside modules, or else risk EXPLODING the visualization
+      if class_name == 'module':
+        new_obj.extend(['INSTANCE', class_name])
+        return
+
       if hasattr(dat, '__str__') and \
          (not dat.__class__.__str__ is object.__str__): # make sure it's not the lame default __str__
         # N.B.: when objects are being constructed, this call
@@ -350,11 +355,8 @@ class ObjectEncoder:
         new_obj.extend(['INSTANCE_PPRINT', class_name, pprint_str])
         return # bail early
       else:
-
         new_obj.extend(['INSTANCE', class_name])
-        # don't traverse inside modules, or else risk EXPLODING the visualization
-        if class_name == 'module':
-          return
+
     else:
       superclass_names = [e.__name__ for e in dat.__bases__ if e is not object]
       new_obj.extend(['CLASS', get_name(dat), superclass_names])
