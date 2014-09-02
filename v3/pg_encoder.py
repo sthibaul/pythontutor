@@ -57,7 +57,7 @@
 #   * instance with __str__ defined - ['INSTANCE_PPRINT', class name, <__str__ value>]
 #   * class    - ['CLASS', class name, [list of superclass names], [attr1, value1], [attr2, value2], ..., [attrN, valueN]]
 #   * function - ['FUNCTION', function name, parent frame ID (for nested functions)]
-#   * image    - ['IMAGE', filename, mode, (width, height), content as string]
+#   * image    - ['IMAGE', filename, mode, width, height, content as string]
 #   * module   - ['module', module name]
 #   * other    - [<type name>, string representation of object]
 #   * compound object reference - ['REF', target object's unique_id]
@@ -320,7 +320,9 @@ class ObjectEncoder:
         else:
           new_obj.append("sans nom")
         new_obj.append(dat.__dict__["mode"])
-        new_obj.append(dat.__dict__["size"])
+        (l,h) = dat.__dict__["size"]
+        new_obj.append(str(l))
+        new_obj.append(str(h))
         s = myIO()
         dat.save(s, "png")
         new_obj.append("image/png;base64," + (base64.b64encode(s.getvalue())).decode("ASCII"))

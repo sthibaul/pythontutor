@@ -2496,10 +2496,10 @@ ExecutionVisualizer.prototype.renderDataStructures = function(curEntry, curTople
       renderPrimitiveObject(primitiveVal, d3DomElement.find('div.heapPrimitive'));
     }
     else if (obj[0] == 'IMAGE') {
-      assert(obj.length == 5);
+      assert(obj.length == 6);
       d3DomElement.append('<div class="typeLabel">Image ' + typeLabelPrefix + obj[1] + '</div>');
 
-      d3DomElement.append('<table class="customObjTbl"><tr><td class="customObjElt">' + obj[2] + " " + obj[3] + '<br/><img src="data:' + obj[4] + '"/></td></tr></table>');
+      d3DomElement.append('<table class="customObjTbl"><tr><td class="customObjElt">' + obj[2] + " " + obj[3] + "x" + obj[4] + '<br/><img src="data:' + obj[5] + '"/></td></tr></table>');
     }
     else {
       // render custom data type
