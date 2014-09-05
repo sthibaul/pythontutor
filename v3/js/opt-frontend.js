@@ -563,9 +563,7 @@ $(document).ready(function() {
 
   // log a generic AJAX error handler
   $(document).ajaxError(function() {
-    alert("Server error (possibly due to memory/resource overload). " +
-          "Report a bug to philip@pgbovine.net\n\n" +
-          "(Click the 'Generate URL' button to include a unique URL in your email bug report.)");
+	  alert("Erreur du serveur (probablement dûe à une surcharge mémoire ou processeur).\n\nVotre programme fait sans doute trop de boucles ?");
 
     $('#executeBtn').html("Lancer l'exécution");
     $('#executeBtn').attr('disabled', false);
