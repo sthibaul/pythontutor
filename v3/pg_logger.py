@@ -1177,7 +1177,7 @@ class PGLogger(bdb.Bdb):
 
 
         if len(self.trace) >= MAX_EXECUTED_LINES:
-          self.trace.append(dict(event='instruction_limit_reached', exception_msg='(stopped after ' + str(MAX_EXECUTED_LINES) + ' steps to prevent possible infinite loop)'))
+          self.trace.append(dict(event='instruction_limit_reached', exception_msg='(arrêté après ' + str(MAX_EXECUTED_LINES) + ' étapes pour éviter une éventuelle boucle infinie)'))
           self.force_terminate()
 
         self.forget()
