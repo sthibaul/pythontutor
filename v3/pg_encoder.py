@@ -299,6 +299,7 @@ class ObjectEncoder:
         new_obj.append(nomGraphe(dat))
         new_obj.append("")
         new_obj.append("")
+        new_obj.append("")
         graph_dot = dotify(dat, False, "Black")
         image = Graphviz(graph_dot, "dot")
         os.unlink(graph_dot)
