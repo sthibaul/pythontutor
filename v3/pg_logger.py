@@ -50,7 +50,7 @@ import pg_encoder
 
 # upper-bound on the number of executed lines, in order to guard against
 # infinite loops
-MAX_EXECUTED_LINES = 300
+MAX_EXECUTED_LINES = 10000
 
 #DEBUG = False
 DEBUG = True
@@ -1177,7 +1177,7 @@ class PGLogger(bdb.Bdb):
 
 
         if len(self.trace) >= MAX_EXECUTED_LINES:
-          self.trace.append(dict(event='instruction_limit_reached', exception_msg='(arrêté après ' + str(MAX_EXECUTED_LINES) + ' étapes pour éviter une éventuelle boucle infinie)'))
+          self.trace.append(dict(event='instruction_limit_reached', exception_msg='(arrêté après ' + str(MAX_EXECUTED_LINES) + ' étapes pour limiter la charge)'))
           self.force_terminate()
 
         self.forget()
