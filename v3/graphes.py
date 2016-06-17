@@ -137,7 +137,7 @@ def sommetVoisin(s, a):
         return a.end
     if a.end == s:
         return a.start
-    raise Exception("le sommet '" + nomSommet(s) + "' n'est pas une extrémité de l'arete ('" + nomSommet(a.start) +"', '"+ nomSommet(a.end) + "').")
+    raise Exception("\n\nle sommet '" + nomSommet(s) + "' n'est pas une extrémité de l'arete ('" + nomSommet(a.start) +"', '"+ nomSommet(a.end) + "').")
 
 ################ PRIMITIVES arete ########################
 
@@ -203,7 +203,7 @@ def verif_type_sommet(s):
         if (type(s) == str):
             raise TypeError("'" + s + "' est une chaine de caracteres alors que la fonction attend un sommet. Peut-etre voulez-vous utiliser la fonction SommetNom(G, etiquette)?")
         else:
-        raise ErreurParametre(s, "un sommet")
+            raise ErreurParametre(s, "un sommet")
 
 def verif_type_arete(a):
     if a.__class__.__name__ != 'c_edge':
@@ -228,7 +228,7 @@ class ErreurParametre (TypeError):
             strArg = "'" + self.arg + "'"
         else:
             strArg = str (self.arg)
-        return strArg + " n'est pas " + self.param
+        return "\n\n" + strArg + " n'est pas " + self.param
 
 ############### Construction de graphes  #####################
     
