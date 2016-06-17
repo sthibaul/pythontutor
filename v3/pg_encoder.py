@@ -80,7 +80,11 @@ from PIL import Image
 from PIL import PngImagePlugin
 typeRE = re.compile("<type '(.*)'>")
 classRE = re.compile("<class '(.*)'>")
-from bibV3 import *
+#from graphes import *
+#from bibV3 import *
+#import bibV3
+from graphes import *
+from dotify import *
 
 import inspect
 
