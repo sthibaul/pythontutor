@@ -86,8 +86,11 @@ listeVariablesExclude=[
 "estMarqueSommet",
 "Europe",
 "fig22",
+"fig32",
 "glob",
 "graphes",
+"listeGraphes",
+"ouvrirGraphe",
 "graphesPlanairesReguliers",
 "Graphviz",
 "hypercubeDim3",
@@ -189,7 +192,7 @@ else:
 ALLOWED_STDLIB_MODULE_IMPORTS = ('math', 'random', 'datetime',
                           'functools', 'itertools', 'operator', 'string',
                           'collections', 're', 'json',
-                          'heapq', 'bisect', 'PIL.Image', 'PIL', 'bibV3')
+                          'heapq', 'bisect', 'PIL.Image', 'PIL', 'bibV3', 'graphes')
 
 # whitelist of custom modules to import into OPT
 # (TODO: support modules in a subdirectory, but there are various

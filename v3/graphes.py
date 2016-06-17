@@ -1,38 +1,24 @@
 # coding=utf-8
-import os, platform, subprocess, random, glob, sys
+# NOTE: on évite d'importer n'importe quoi comme module, pour ne pas laisser un utilisateur écrire des fichiers ou autre !
+import random
+
+if False:
+	import os
+
+if False:
+	os.mkdir('/tmp/a')
+
 #from random import randrange
 
-if sys.hexversion < 3 << 24:
-    print("graphes ne fonctionne qu'avec idle3 (python3), pas avec idle (python)")
-    sys.exit(1)
+#if sys.hexversion < 3 << 24:
+#    print("graphes ne fonctionne qu'avec idle3 (python3), pas avec idle (python)")
+#    sys.exit(1)
 
 # Attention, eviter que les deux noms globaux qui suivent
 # aient meme prefixe que les noms "publics"
 # proposes par Idle (completion de nom);
 # on pourrait evidemment ajouter un _ en tete
 
-plateforme = platform.system ()
-
-pathGraphviz = ''
-
-if plateforme == 'Windows':
-    l = glob.glob('C:/Program Files*/Graphviz*/bin/dot.exe')
-    if l == []:
-        print("Graphviz non trouve, veuillez l'installer")
-        sys.exit(1)
-    path = l[0]
-    pathGraphviz = path[0:-7]
-else:
-    l = glob.glob('/usr/bin/dot')
-    if l == []:
-        l = glob.glob('/usr/local/bin/dot')
-        if l == []:
-            l = glob.glob('/opt/local/bin/dot')
-            if l == []:
-                print("Graphviz non trouve, veuillez l'installer")
-                sys.exit(1)
-    path = l[0]
-    pathGraphviz = path[0:-3]
 
 
 ################ PRIMITIVES GENERIQUES SUR LES LISTES   ##############
@@ -292,119 +278,6 @@ def construireGraphe (paths, label, chemins = True):
             if chemins:
                 i = j
     return G
-
-############### Dessin du graphe  #####################
-
-# fonction necessaire a cause par exemple des 'Pays Bas' (blanc dans label)
-def _proteger (label):
-    return '"' + label + '"'
-
-# La fonction 'dotify' transforme le graphe en un fichier texte
-# qui servira de source (suffixe .dot) pour les programmes de Graphviz.
-# Cette fonction ne depend pas du systeme d'exploitation.
-
-def dotify (G, etiquettesAretes = True, colormark = 'Black', suffixe = 'dot'):
-
-    # graphe non oriente, il faut eviter de traiter chaque arete deux fois
-    for s in G.nodes:
-        for a in s.edges:
-            a.ecrite = False
-            
-    if G.label == '':
-        nom_graphe = 'G'
-    else:
-        nom_graphe = G.label
-
-    graph_dot = 'tmp/' + nom_graphe + '.' + suffixe
-        
-    try:
-        f = open (graph_dot, 'w')
-    except IOError:
-        os.mkdir ('tmp')
-        f = open (graph_dot, 'w')
-        
-    f.write ('graph "' + nom_graphe + '" {\n' + G.drawopts + '\n')
-
-    for s in G.nodes:
-        d = len (s.edges)
-        snom = _proteger (s.label)
-        for a in s.edges:
-            if not a.ecrite:
-                a.ecrite = True
-                if a.start == s:
-                    t = a.end
-                else:
-                    t = a.start
-                f.write ('  ' + snom + ' -- ' + _proteger (t.label))
-                if etiquettesAretes:
-                    f.write (' [label = ' + _proteger (a.label) + ']')
-                if a.mark:
-                    f.write (' [style = bold, color = orange]')
-                # Semicolons aid readability but are not required (dotguide.pdf)
-                f.write (a.drawopts + ';\n')
-        bord = 'black'
-        if s.mark:
-            entoure = 2
-            bord = colormark
-        else:
-            entoure = 1
-        if s.color:
-            if s.color == "black":
-                fontcolor = "white"
-            else:
-                fontcolor = "black"
-            f.write ('  %s [style = filled, peripheries = %s, fillcolor = %s, fontcolor = %s, color = %s] %s;\n' %
-                     (snom, entoure, s.color, fontcolor, bord, s.drawopts))
-        elif s.mark:
-##            f.write ('  ' + snom + ' [peripheries = 2, color = ' + bord + ']' +
-##                     s.drawopts + ';\n');
-            f.write ('  %s [peripheries = 2, color = %s] %s;\n' %
-                     (snom, bord, s.drawopts))
-        elif d == 0 or s.drawopts:
-            f.write ('  ' + snom + s.drawopts + ';\n')
-            
-    f.write ('}\n')
-    f.close ()
-    return graph_dot
-
-# La fonction 'Graphviz' lance l'execution d'un programme
-# de la distribution Graphviz (dot, neato, twopi, circo, fdp)
-# pour transformer un fichier texte source de nom 'racine.suffixe'
-# en une image de nom 'racine.format' (peut-etre un fichier PostScript)
-
-def Graphviz (source, algo = 'dot', format = 'svg', suffixe = 'dot'):
-    image = source.replace ('.' + suffixe, '.' + format)
-    algo = pathGraphviz + algo
-    if plateforme == 'Windows':
-        algo = algo + '.exe'
-    subprocess.call ([algo, '-T' + format, source, '-o', image])
-    return image
-
-# Enchaine dotify et Graphviz avec des arguments standard adaptes au systeme
-# et lance le programme ad hoc pour afficher l'image
-
-def dessinerGraphe (G, etiquettesAretes = False, algo = 'dot', colormark = 'Black'):
-    verif_type_graphe (G)
-    sys = platform.system ()
-    if plateforme == 'Windows':
-        # eviter toute embrouille avec les modeles de document de MS Word
-        graph_dot = dotify (G, etiquettesAretes, colormark, 'txt')
-        image = Graphviz (graph_dot, algo, suffixe = 'txt')
-        image = image.replace ('/', '\\')
-        os.startfile (image)
-        return
-
-    graph_dot = dotify (G, etiquettesAretes, colormark)
-    image = Graphviz (graph_dot, algo)
-    if plateforme == 'Linux':
-        #subprocess.call (['firefox', image])
-        subprocess.Popen (['firefox ' + image + ' &'], shell=True)
-    elif plateforme == 'Darwin':
-        subprocess.call (['open', image])
-    else:
-        print("Systeme " + plateforme + " imprevu, abandon du dessin")
-        
-dessiner = dessinerGraphe
 
 # Cela pourrait être mieux écrit avec des règles standards de lexing/parsing, mais cela évite des dépendances
 
@@ -744,10 +617,10 @@ def _makePetersen ():
     # start = germe du generateur aleatoire pour le placement initial des sommets
     # valeurs OK au CREMI [0, 12, 16, 18, 23, 24, 30, 33]
     # start = 4 interessant aussi
-    if plateforme == 'Windows':
-        g.drawopts = 'edge [len = 2]'
-    else:
-        g.drawopts = 'start = 23; edge [len = 2]'
+    #if plateforme == 'Windows':
+    #    g.drawopts = 'edge [len = 2]'
+    #else:
+    g.drawopts = 'start = 23; edge [len = 2]'
     for i in range (5):
         s = sommetNumero (g, i)
         a = areteNumero (s, 2)
