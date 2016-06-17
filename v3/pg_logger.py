@@ -124,6 +124,7 @@ listeVariablesExclude=[
 "verif_type_chaine",
 "verif_type_graphe",
 "verif_type_sommet",
+"verif_type_couleur",
 "voisinNumero",
 
 "tempfile",
