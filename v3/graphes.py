@@ -137,7 +137,7 @@ def sommetVoisin(s, a):
         return a.end
     if a.end == s:
         return a.start
-    raise Exception("\n\nle sommet '" + nomSommet(s) + "' n'est pas une extrémité de l'arete ('" + nomSommet(a.start) +"', '"+ nomSommet(a.end) + "').")
+    raise Exception("le sommet '" + nomSommet(s) + "' n'est pas une extrémité de l'arete ('" + nomSommet(a.start) +"', '"+ nomSommet(a.end) + "').")
 
 ################ PRIMITIVES arete ########################
 
@@ -228,7 +228,7 @@ class ErreurParametre (TypeError):
             strArg = "'" + self.arg + "'"
         else:
             strArg = str (self.arg)
-        return "\n\n" + strArg + " n'est pas " + self.param
+        return strArg + " n'est pas " + self.param
 
 ############### Construction de graphes  #####################
     
