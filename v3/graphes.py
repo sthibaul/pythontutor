@@ -2,12 +2,6 @@
 # NOTE: on évite d'importer n'importe quoi comme module, pour ne pas laisser un utilisateur écrire des fichiers ou autre !
 import random
 
-if False:
-	import os
-
-if False:
-	os.mkdir('/tmp/a')
-
 #from random import randrange
 
 #if sys.hexversion < 3 << 24:
@@ -60,15 +54,23 @@ def listeSommets(G):
     return G.nodes
 
 def nbSommets(G):
+    verif_type_graphe(G)
     return len(listeSommets(G))
 
 def sommetNom(G, etiquette):
+    verif_type_graphe(G)
+    verif_type_chaine(etiquette)
     for s in listeSommets(G):
-        if s.label == etiquette:
+        if s.label== etiquette:
             return s
-    return None
+    for s in listeSommets(G):
+        if s.label.lower() == etiquette.lower():
+            raise Exception("le graphe " + nomGraphe(G) + " ne possède pas de sommet d'étiquette '" + etiquette + "'."\
+                             " En revanche il possède un sommet d'étiquette '" + s.label + "'. Remarquez la différence majuscule/minuscule.")
+    raise Exception("le graphe " + nomGraphe(G) + " ne possède pas de sommet d'étiquette '" + etiquette + "'.")
 
 def sommetNumero(G, i):
+    verif_type_graphe(G)
     return listeSommets(G)[i]
 
 ################# PRIMITIVES SOMMET   ###################################
@@ -91,7 +93,7 @@ def estMarqueSommet(s):
 
 def colorierSommet(s, c):
     verif_type_sommet(s)
-    verif_type_chaine(c)
+    verif_type_couleur(c)
     s.color = c
 
 def couleurSommet(s):
@@ -111,9 +113,11 @@ def areteNumero(s, i):
     return listeAretesIncidentes(s)[i]
 
 def degre(s) :
+    verif_type_sommet(s)
     return len(listeAretesIncidentes(s)) 
 
 def listeVoisins(s):
+    verif_type_sommet(s)
     inc = listeAretesIncidentes(s)
     v = []
     for a in inc:
@@ -133,7 +137,7 @@ def sommetVoisin(s, a):
         return a.end
     if a.end == s:
         return a.start
-    return None
+    raise Exception("\n\nle sommet '" + nomSommet(s) + "' n'est pas une extrémité de l'arete ('" + nomSommet(a.start) +"', '"+ nomSommet(a.end) + "').")
 
 ################ PRIMITIVES arete ########################
 
@@ -196,6 +200,9 @@ def verif_type_graphe(G):
     
 def verif_type_sommet(s):
     if s.__class__.__name__ != 'c_node':
+        if (type(s) == str):
+            raise TypeError("'" + s + "' est une chaine de caracteres alors que la fonction attend un sommet. Peut-etre voulez-vous utiliser la fonction SommetNom(G, etiquette)?")
+        else:
         raise ErreurParametre(s, "un sommet")
 
 def verif_type_arete(a):
@@ -206,7 +213,12 @@ def verif_type_chaine(s):
     if type(s) != str:
         raise ErreurParametre(s, "une chaine de caracteres")
 
-class ErreurParametre (Exception):
+def verif_type_couleur(s):
+    if type(s) != str:
+        raise ErreurParametre(s, "une chaine de caracteres représentant une couleur comme par exemple : ’red’, ’green’, ’blue’, ’white’, ’cyan’ ou ’yellow’.")
+
+
+class ErreurParametre (TypeError):
     def __init__(self, arg, param):
         self.arg = arg
         self.param = param
@@ -216,7 +228,7 @@ class ErreurParametre (Exception):
             strArg = "'" + self.arg + "'"
         else:
             strArg = str (self.arg)
-        return strArg + " n'est pas " + self.param
+        return "\n\n" + strArg + " n'est pas " + self.param
 
 ############### Construction de graphes  #####################
     
