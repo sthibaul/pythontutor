@@ -966,6 +966,10 @@ function genericOptFrontendReady() {
 
   // register a generic AJAX error handler
   $(document).ajaxError(function(evt, jqxhr, settings, exception) {
+    if (jqxhr && jqxhr.responseText.indexOf('500') >= 0) {
+      // UB: à cause de l'authentification, on obtient une erreur 500, mais c'est normal
+      return; // get out early
+    }
     // ignore errors related to togetherjs stuff:
     if (settings.url.indexOf('togetherjs') > -1) {
       return; // get out early
