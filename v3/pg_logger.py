@@ -256,7 +256,7 @@ def __restricted_import__(*args):
 
     return imported_mod
   else:
-    raise ImportError('{0} not supported'.format(args[0]))
+    raise ImportError('{0} non autorisé, peut-être une faute de frappe ?'.format(args[0]))
 
 
 # Support interactive user input by:
