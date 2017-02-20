@@ -413,19 +413,18 @@ ExecutionVisualizer.prototype.render = function() {
     '<div id="codeDisplayDiv">\
        <div id="langDisplayDiv"></div>\
        <div id="pyCodeOutputDiv"/>\
-       <div id="editCodeLinkDiv"><a id="editBtn">Edit code</a>\
-       <span id="liveModeSpan" style="display: none;">| <a id="editLiveModeBtn" href="#">Live programming</a></a>\
+       <div id="editCodeLinkDiv"><a id="editBtn">Éditer le code</a>\
        </div>\
        <div id="legendDiv"/>\
-       <div id="executionSliderDocs"><font color="#e93f34">NEW!</font> Click on a line of code to set a breakpoint. Then use the Forward and Back buttons to jump there.</div>\
+       <div id="executionSliderDocs">Cliquer sur une ligne pour définir un point d\'arrêt. Utiliser alors les boutons avant et arrière pour sauter à cette étape.</div>\
        <div id="executionSlider"/>\
        <div id="executionSliderFooter"/>\
        <div id="vcrControls">\
-         <button id="jmpFirstInstr", type="button">&lt;&lt; First</button>\
-         <button id="jmpStepBack", type="button">&lt; Back</button>\
-         <span id="curInstr">Step ? of ?</span>\
-         <button id="jmpStepFwd", type="button">Forward &gt;</button>\
-         <button id="jmpLastInstr", type="button">Last &gt;&gt;</button>\
+         <button id="jmpFirstInstr", type="button">&lt;&lt; Début</button>\
+         <button id="jmpStepBack", type="button">&lt; Arrière</button>\
+         <span id="curInstr">Étape ? sur ?</span>\
+         <button id="jmpStepFwd", type="button">Avant &gt;</button>\
+         <button id="jmpLastInstr", type="button">Fin &gt;&gt;</button>\
        </div>\
        <div id="rawUserInputDiv">\
          <span id="userInputPromptStr"/>\
@@ -453,13 +452,13 @@ ExecutionVisualizer.prototype.render = function() {
          <tr>\
            <td id="stack_td">\
              <div id="globals_area">\
-               <div id="stackHeader">Frames</div>\
+	     <div id="stackHeader">Variables</div>\
              </div>\
              <div id="stack"></div>\
            </td>\
            <td id="heap_td">\
              <div id="heap">\
-               <div id="heapHeader">Objects</div>\
+               <div id="heapHeader">Objets</div>\
              </div>\
            </td>\
          </tr>\
@@ -525,8 +524,8 @@ ExecutionVisualizer.prototype.render = function() {
 
   if (this.params.arrowLines) {
       this.domRoot.find('#legendDiv')
-          .append('<svg id="prevLegendArrowSVG"/> line that has just executed')
-          .append('<p style="margin-top: 4px"><svg id="curLegendArrowSVG"/> next line to execute</p>');
+          .append('<svg id="prevLegendArrowSVG"/> ligne qui vient d\'être exécutée')
+	  .append('<p style="margin-top: 4px"><svg id="curLegendArrowSVG"/> prochaine ligne à exécuter</p>');
       
       myViz.domRootD3.select('svg#prevLegendArrowSVG')
           .append('polygon')
@@ -708,7 +707,7 @@ ExecutionVisualizer.prototype.render = function() {
   // (note that we need to keep #globals_area separate from #stack for d3 to work its magic)
   this.domRoot.find("#globals_area").append('<div class="stackFrame" id="'
     + myViz.generateID('globals') + '"><div id="' + myViz.generateID('globals_header')
-    + '" class="stackFrameHeader">' + this.getRealLabel('Global frame') + '</div><table class="stackFrameVarTable" id="'
+    + '" class="stackFrameHeader">' + this.getRealLabel('Variables globales') + '</div><table class="stackFrameVarTable" id="'
     + myViz.generateID('global_table') + '"></table></div>');
 
 
@@ -1669,13 +1668,13 @@ ExecutionVisualizer.prototype.updateOutputFull = function(smoothTransition) {
       vcrControls.find("#curInstr").html("Instruction limit reached");
     }
     else {
-      vcrControls.find("#curInstr").html("Program terminated");
+      vcrControls.find("#curInstr").html("Programme terminé");
     }
   }
   else {
-    vcrControls.find("#curInstr").html("Step " +
+    vcrControls.find("#curInstr").html("Étape " +
                                        String(this.curInstr + 1) +
-                                       " of " + String(totalInstrs-1));
+                                       " sur " + String(totalInstrs-1));
   }
 
 
@@ -2529,7 +2528,7 @@ ExecutionVisualizer.prototype.renderDataStructures = function(curEntry, curTople
   // not really using d3 to the fullest, but oh wells!
   myViz.domRoot.find('#heap')
     .empty()
-    .html('<div id="heapHeader">Objects</div>');
+    .html('<div id="heapHeader">Objets</div>');
 
 
   var heapRows = myViz.domRootD3.select('#heap')
@@ -2919,7 +2918,7 @@ ExecutionVisualizer.prototype.renderDataStructures = function(curEntry, curTople
 
       if (i == 0) {
         if (varname == '__return__')
-          $(this).html('<span class="retval">Return<br/>value</span>');
+	    $(this).html('<span class="retval">Valeur<br/>retournée</span>');
         else
           $(this).html(varname);
       }
@@ -3891,6 +3890,12 @@ function(objID, stepNum, d3DomElement, isTopLevel) {
   }
   else if (obj[0] == 'C_STRUCT' || obj[0] == 'C_ARRAY') {
     myViz.renderCStructArray(obj, stepNum, d3DomElement);
+  }
+  else if (obj[0] == 'IMAGE') {
+    assert(obj.length == 6);
+    d3DomElement.append('<div class="typeLabel">Image ' + typeLabelPrefix + obj[1] + '</div>');
+
+    d3DomElement.append('<table class="customObjTbl"><tr><td class="customObjElt">' + obj[2] + " " + obj[3] + "x" + obj[4] + '<br/><img src="data:' + obj[5] + '" width=' + obj[3] + ' height=' + obj[4] + ' /></td></tr></table>');
   }
   else {
     // render custom data type

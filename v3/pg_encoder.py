@@ -57,6 +57,7 @@
 #   * instance with __str__ defined - ['INSTANCE_PPRINT', class name, <__str__ value>]
 #   * class    - ['CLASS', class name, [list of superclass names], [attr1, value1], [attr2, value2], ..., [attrN, valueN]]
 #   * function - ['FUNCTION', function name, parent frame ID (for nested functions)]
+#   * image    - ['IMAGE', filename, mode, width, height, content as string]
 #   * module   - ['module', module name]
 #   * other    - [<type name>, string representation of object]
 #   * compound object reference - ['REF', target object's unique_id]
@@ -70,10 +71,21 @@ FLOAT_PRECISION = 4
 
 from collections import defaultdict
 import re, types
+import os
 import sys
 import math
+import base64
+import resource
+import tempfile
+from PIL import Image
+from PIL import PngImagePlugin
 typeRE = re.compile("<type '(.*)'>")
 classRE = re.compile("<class '(.*)'>")
+#from graphes import *
+#from bibV3 import *
+#import bibV3
+from graphes import *
+from dotify import *
 
 import inspect
 
@@ -84,6 +96,10 @@ if is_python3:
   long = int
   unicode = str
 
+if is_python3:
+  from io import BytesIO as myIO
+else:
+  from StringIO import StringIO as myIO
 
 def is_class(dat):
   """Return whether dat is a class."""
@@ -343,6 +359,46 @@ class ObjectEncoder:
         # http://docs.python.org/release/3.1.5/c-api/capsule.html
         class_name = get_name(type(dat))
 
+      if class_name == "c_graph":
+        new_obj.append('IMAGE')
+        new_obj.append(nomGraphe(dat))
+        new_obj.append("")
+        new_obj.append("")
+        new_obj.append("")
+        graph_dot = dotify(dat, False, "Black")
+        image = Graphviz(graph_dot, "dot")
+        os.unlink(graph_dot)
+        (soft,maximum) = resource.getrlimit(resource.RLIMIT_NOFILE)
+        if soft == 0:
+            resource.setrlimit(resource.RLIMIT_NOFILE, (maximum,maximum))
+        f = open(image,'r')
+        s = f.read()
+        if soft == 0:
+            resource.setrlimit(resource.RLIMIT_NOFILE, (0,maximum))
+        os.unlink(image)
+        new_obj.append("image/svg+xml;base64," + (base64.b64encode(s.encode("ASCII"))).decode("ASCII"))
+        return
+
+      if class_name[-9:] == 'ImageFile' or class_name == "Image":
+        new_obj.append('IMAGE')
+        if "filename" in dat.__dict__:
+          new_obj.append(dat.__dict__["filename"])
+        else:
+          new_obj.append("sans nom")
+        new_obj.append(dat.__dict__["mode"])
+        (l,h) = dat.__dict__["size"]
+        new_obj.append(str(l))
+        new_obj.append(str(h))
+        s = myIO()
+        dat.save(s, "png")
+        new_obj.append("image/png;base64," + (base64.b64encode(s.getvalue())).decode("ASCII"))
+        return
+
+      # don't traverse inside modules, or else risk EXPLODING the visualization
+      if class_name == 'module':
+        new_obj.extend(['INSTANCE', class_name])
+        return
+
       if hasattr(dat, '__str__') and \
          (not dat.__class__.__str__ is object.__str__): # make sure it's not the lame default __str__
         # N.B.: when objects are being constructed, this call
@@ -354,11 +410,21 @@ class ObjectEncoder:
 
         new_obj.extend(['INSTANCE_PPRINT', class_name, pprint_str])
         return # bail early
+
+      if hasattr(dat, '__repr__') and \
+         (not dat.__class__.__repr__ is object.__repr__): # make sure it's not the lame default __str__
+        # N.B.: when objects are being constructed, this call
+        # might fail since not all fields have yet been populated
+        try:
+          pprint_str = repr(dat)
+        except:
+          pprint_str = '<incomplete object>'
+
+        new_obj.extend(['INSTANCE_PPRINT', class_name, pprint_str])
+        return # bail early
       else:
         new_obj.extend(['INSTANCE', class_name])
-        # don't traverse inside modules, or else risk EXPLODING the visualization
-        if class_name == 'module':
-          return
+
     else:
       superclass_names = [e.__name__ for e in dat.__bases__ if e is not object]
       new_obj.extend(['CLASS', get_name(dat), superclass_names])

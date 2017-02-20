@@ -52,8 +52,8 @@ import pg_encoder
 
 # upper-bound on the number of executed lines, in order to guard against
 # infinite loops
-#MAX_EXECUTED_LINES = 300
-MAX_EXECUTED_LINES = 1000 # on 2016-05-01, I increased the limit from 300 to 1000 for Python due to popular user demand! and I also improved the warning message
+#MAX_EXECUTED_LINES = 1000 # on 2016-05-01, I increased the limit from 300 to 1000 for Python due to popular user demand! and I also improved the warning message
+MAX_EXECUTED_LINES = 10000
 
 #DEBUG = False
 DEBUG = True
@@ -61,6 +61,86 @@ DEBUG = True
 BREAKPOINT_STR = '#break'
 
 CLASS_RE = re.compile('class\s+')
+
+listeVariablesExclude=[
+"areteNumero",
+"c_edge",
+"c_graph",
+"c_node",
+"colorierSommet",
+"construireArbre",
+"construireBipartiComplet",
+"construireComplet",
+"construireGraphe",
+"construireGrille",
+"construireTriangle",
+"couleurSommet",
+"cube",
+"degre",
+"demarquerArete",
+"demarquerSommet",
+"dessiner",
+"dessinerGraphe",
+"dodecaedre",
+"dotify",
+"elementAleatoireListe",
+"ErreurParametre",
+"estMarqueeArete",
+"estMarqueSommet",
+"Europe",
+"fig22",
+"fig32",
+"glob",
+"graphes",
+"listeGraphes",
+"ouvrirGraphe",
+"graphesPlanairesReguliers",
+"Graphviz",
+"hypercubeDim3",
+"icosaedre",
+"Koenigsberg",
+"listeAretesIncidentes",
+"listeSommets",
+"listeVoisins",
+"marquerArete",
+"marquerSommet",
+"melange",
+"nbSommets",
+"nomArete",
+"nomGraphe",
+"nomSommet",
+"numeroterArete",
+"octaedre",
+"pathGraphviz",
+"Petersen",
+"plateforme",
+"platform",
+"prefixer",
+"random",
+"sommetNom",
+"sommetNumero",
+"sommetVoisin",
+"subprocess",
+"tetraedre",
+"tgv2005",
+"verif_type_arete",
+"verif_type_chaine",
+"verif_type_graphe",
+"verif_type_sommet",
+"verif_type_couleur",
+"voisinNumero",
+
+"tempfile",
+"resource",
+
+"Image",
+"PngImagePlugin",
+"PILLOW_VERSION",
+"ImageFile",
+"VERSION",
+"ImagePalette",
+"ImageMode",
+"ImageColor"]
 
 
 # simple sandboxing scheme:
@@ -116,7 +196,8 @@ else:
 ALLOWED_STDLIB_MODULE_IMPORTS = ('math', 'random', 'time', 'datetime',
                           'functools', 'itertools', 'operator', 'string',
                           'collections', 're', 'json',
-                          'heapq', 'bisect', 'copy', 'hashlib')
+                          'heapq', 'bisect', 'copy', 'hashlib',
+			  'PIL.Image', 'PIL', 'bibV3', 'graphes')
 
 # allow users to import but don't explicitly import it since it's
 # already been done above
@@ -353,6 +434,10 @@ def get_user_globals(frame, at_global_scope=False):
   if not is_python3 and hasattr(frame, 'f_valuestack'):
     for (i, e) in enumerate([e for e in frame.f_valuestack if type(e) is list]):
       d['_tmp' + str(i+1)] = e
+
+  for s in listeVariablesExclude:
+    if s in d:
+      del d[s]
 
   # also filter out __return__ for globals only, but NOT for locals
   if '__return__' in d:
@@ -1187,7 +1272,7 @@ class PGLogger(bdb.Bdb):
 
 
         if len(self.trace) >= MAX_EXECUTED_LINES:
-          self.trace.append(dict(event='instruction_limit_reached', exception_msg='Stopped after running ' + str(MAX_EXECUTED_LINES) + ' steps. Please shorten your code,\nsince Python Tutor is not designed to handle long-running code.'))
+          self.trace.append(dict(event='instruction_limit_reached', exception_msg='(arrêté après' + str(MAX_EXECUTED_LINES) + ' étapes pour limiter la charge)'))
           self.force_terminate()
 
         self.forget()
@@ -1297,7 +1382,7 @@ class PGLogger(bdb.Bdb):
             resource.setrlimit(resource.RLIMIT_CPU, (5, 5))
 
             # protect against unauthorized filesystem accesses ...
-            resource.setrlimit(resource.RLIMIT_NOFILE, (0, 0)) # no opened files allowed
+            resource.setrlimit(resource.RLIMIT_NOFILE, (0, 4096)) # no opened files allowed
 
             # VERY WEIRD. If you activate this resource limitation, it
             # ends up generating an EMPTY trace for the following program:
@@ -1319,11 +1404,11 @@ class PGLogger(bdb.Bdb):
             for a in dir(sys.modules['posix']):
               delattr(sys.modules['posix'], a)
             # do the same with os
-            for a in dir(sys.modules['os']):
-              # 'path' is needed for __restricted_import__ to work
-              # and 'stat' is needed for some errors to be reported properly
-              if a not in ('path', 'stat'):
-                delattr(sys.modules['os'], a)
+            #for a in dir(sys.modules['os']):
+            #  # 'path' is needed for __restricted_import__ to work
+            #  # and 'stat' is needed for some errors to be reported properly
+            #  if a not in ('path', 'stat','getenv','getpid','open','close','device_encoding','fsencode','isinstance'):
+            #    delattr(sys.modules['os'], a)
             # ppl can dig up trashed objects with gc.get_objects()
             import gc
             for a in dir(sys.modules['gc']):

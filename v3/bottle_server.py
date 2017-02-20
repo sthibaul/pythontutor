@@ -1,6 +1,6 @@
 # Lightweight OPT server that works on both Python 2 and 3
 
-# to invoke, run 'python bottle_server.py'
+# to invoke, run 'python3 bottle_server.py'
 # and visit http://localhost:8080/index.html
 #
 # external dependencies: bottle
@@ -17,7 +17,7 @@ import StringIO # NB: don't use cStringIO since it doesn't support unicode!!!
 import json
 import pg_logger
 import urllib
-import urllib2
+import urllib3
 
 # dummy routes for testing only
 @route('/web_exec_<name:re:.+>.py')
@@ -36,7 +36,7 @@ def index(filepath):
         return json.dumps(dict(name='TEST NAME', email='TEST EMAIL'))
     return static_file(filepath, root='.')
 
-@get('/exec')
+@get('/web_exec.py')
 def get_exec():
   out_s = StringIO.StringIO()
 
@@ -106,8 +106,8 @@ if n_fail == 0:
   values = {'user_script' : script}
 
   data = urllib.urlencode(values)
-  req = urllib2.Request(url, data)
-  response = urllib2.urlopen(req)
+  req = urllib3.Request(url, data)
+  response = urllib3.urlopen(req)
   the_page = response.read()
   return the_page
 
