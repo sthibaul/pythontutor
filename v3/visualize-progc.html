@@ -92,6 +92,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 <tr>
 <td valign="top">
 
+<!--
 <div id="ssDiv">
   <button id="sharedSessionBtn" type="button" class="togetherjsBtn">
   Start shared session
@@ -100,6 +101,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <a href="https://www.youtube.com/watch?v=Z2TIjNArOK4" target="_blank">What are shared sessions?</a>
   </div>
 </div>
+-->
 
 <div id="sharedSessionDisplayDiv" style="display: none;">
   <button id="stopTogetherJSBtn" type="button" class="togetherjsBtn">
@@ -125,9 +127,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 <div id="pyInputPane">
 
-<div id="codeInputWarnings">Write code in
+<div id="codeInputWarnings">Écrire le code C ici:
 
-  <select id="pythonVersionSelector">
+  <select id="pythonVersionSelector" hidden=true>
+    <option value="c">C (gcc 4.8, C11) EXPERIMENTAL</option>
     <option value="2">Python 2.7</option>
     <option value="3">Python 3.3</option>
     <!--<option value="2crazy">Py 2.crazy</option>-->
@@ -135,7 +138,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <option value="js">JavaScript ES6</option>
     <option value="ts">TypeScript 1.4</option>
     <option value="ruby">Ruby 2.2</option>
-    <option value="c">C (gcc 4.8, C11) EXPERIMENTAL</option>
     <option value="cpp">C++ (gcc 4.8, C++11) EXPERIMENTAL</option>
   </select>
 
@@ -148,27 +150,31 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 <div id="surveyPane"></div>
 
 <p>
-<button id="executeBtn" class="bigBtn" type="button">Visualize Execution</button>
+<button id="executeBtn" class="bigBtn" type="button">Lancer l'exécution</button>
+<!--
 <button style="margin-left: 20px;" id="liveModeBtn" class="bigBtn" type="button">Live Programming Mode <font color="#e93f34">(NEW!)</font></button>
+-->
 </p>
 
 
+<!--
 <div id="javaOptionsPane" style="margin-top: 20px;">
 [<i>coming soon!</i>] Java options: pass in command-line arguments and feed user input to stdin
 </div>
+-->
 
 
 <div id="optionsPane" style="margin-top: 20px; line-height: 150%;">
-  <select id="cumulativeModeSelector">
+  <select id="cumulativeModeSelector" hidden=true>
     <option value="false">hide exited frames [default]</option>
     <option value="true">show all frames (Python)</option>
     <!-- <option value="holistic">holistic mode (experimental)</option> -->
   </select>
-  <select id="heapPrimitivesSelector">
+  <select id="heapPrimitivesSelector" hidden=true>
     <option value="false">inline primitives &amp; nested objects [default]</option>
     <option value="true">render all objects on the heap (Python/Java)</option>
   </select>
-  <select id="textualMemoryLabelsSelector">
+  <select id="textualMemoryLabelsSelector" hidden=true>
     <option value="false">draw pointers as arrows [default]</option>
     <option value="true">use text labels for pointers</option>
   </select>
@@ -185,6 +191,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </div>
 
 
+<!--
 <p style="margin-top: 25px;"><a href="#" id="createTestsLink">Create test cases</a></p>
 
 <div id="testCasesPane"></div>
@@ -399,6 +406,7 @@ Misc:
   <a class="exampleLink" id="cppInheritLink" href="#">Inheritance</a> |
   <a class="exampleLink" id="cppVirtualLink" href="#">Virtual method</a>
 </p>
+-->
 
 </div>
 
@@ -406,6 +414,7 @@ Misc:
 <div id="pyOutputPane">
 </div>
 
+<!--
 <div id="footer">
 
 <p>
@@ -503,6 +512,7 @@ Copyright &copy; <a href="http://www.pgbovine.net/">Philip Guo</a>.  All rights 
 </p>
 
 </div>
+-->
 
 <!-- for Codeopticon,
      adapted from: http://reason.cs.illinois.edu/wenpu1/chatbox.html -->

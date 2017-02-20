@@ -1630,9 +1630,10 @@ function executeCodeAndCreateViz(codeToExec,
     jsonp_endpoint = null;
 
     // hacky!
-    if (backendScript === python2_backend_script) {
-      frontendOptionsObj.lang = 'py2';
-    } else if (backendScript === python3_backend_script) {
+    //if (backendScript === python2_backend_script) {
+    //  frontendOptionsObj.lang = 'py2';
+    //} else
+    if (backendScript === python3_backend_script) {
       frontendOptionsObj.lang = 'py3';
     } else if (backendScript === js_backend_script) {
       frontendOptionsObj.lang = 'js';
