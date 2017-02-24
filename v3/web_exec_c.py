@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/python
 
 # dummy NOP script just so Apache can log the request on the server
 
