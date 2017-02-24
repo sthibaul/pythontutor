@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3.2
 
 # Minimal CGI script for Online Python Tutor (v3), tested under Python 2 and 3
 
