@@ -357,6 +357,10 @@ def _mot (s, debut):
     #print(s[debut:fin],fin+1)
     return s[debut:fin],fin+1
 
+def _mot_int(s, i):
+    mot,i = _mot(s, i)
+    return int(mot), i
+
 # Parsing
 
 # Lit le contenu d'attributs. Le [ initial a déjà été consommé. On commence à regarder à la position i
@@ -376,13 +380,32 @@ def _attributs(s,i):
         #print("attribut "+nom+" défini à "+val+" .")
         attributs[nom] = val
         nom,i = _mot(s,i)
+        if nom == ']':
+            nom2,j = _mot(s,i)
+            if nom2 == '[':
+                # Fermer la porte, pour la rouvrir aussitôt...
+                nom,i = _mot(s,j)
     return attributs,i
+
+def _drawopts(attributs):
+    drawopts = "["
+    for x in attributs:
+        v = x + "=" + attributs[x]
+        if drawopts == "[":
+            drawopts += v
+        else:
+            drawopts += ", " + v
+    drawopts += "]"
+    return drawopts
 
 # Lit une définion de graphe, en commançant par son nom à la position i
 # Retourne une liste de chemins et la nouvelle position
 def _litgrapheDOT(s,i):
     chemins = []
     couleurs = []
+    nodeattr = []
+    edgeattr = []
+    defattr = []
     nom,i = _mot(s,i)
     if nom[0] == '"':
         nom = nom[1:-1]
@@ -397,7 +420,7 @@ def _litgrapheDOT(s,i):
             raise SyntaxError("Fichier incorrect: pas d'accolade fermante terminale à la fin du fichier")
 
         if mot == "graph" or mot == "node" or mot == "edge":
-            # attributs par défaut, on ignore
+            # attributs par défaut
             crochet,j = _mot(s,i)
             if crochet != '[':
                 raise SyntaxError("Fichier incorrect: trouvé "+crochet+" au lieu d'un crochet ouvrant à "+str(i)+' '+str(j))
@@ -405,14 +428,27 @@ def _litgrapheDOT(s,i):
             attr,i = _attributs(s,i)
             if mot == "node" and "fillcolor" in attr:
                 couleurDefautSommet = attr["fillcolor"]
+            defattr += [ mot + _drawopts(attr) ]
             mot,i = _mot(s,i)
 
+        elif mot == "start":
+            # attribut d'un graphe
+            equal,j = _mot(s,i)
+            if equal != '=':
+                raise SyntaxError("Fichier inccorect: pour "+mot+", trouvé "+equal+" au lieu d'un = à "+str(i))
+            i = j
+            val,i = _mot(s,i)
+            defattr += [ mot + '=' + val ]
+            mot,i = _mot(s,i)
         elif mot == "subgraph":
             # récursion!
             # idéalement il faudrait séparer les espaces de noms de sommets
-            _,chemins_sousgraphe,couleurs_sougraphe,i = _litgrapheDOT(s,i)
+            _,chemins_sousgraphe,couleurs_sougraphe,nodeattr_sousgraphe,edgeattr_sousgraphe,defattr_sousgraphe,i = _litgrapheDOT(s,i)
             couleurs = chemins_sousgraphe + couleurs
             chemins = chemins_sousgraphe + chemins
+            nodeattr = nodeattr_sousgraphe + nodeattr
+            edgeattr = edgeattr_sousgraphe + edgeattr
+            defattr = defattr_sousgraphe + defattr
             mot,i = _mot(s,i)
 
         else:
@@ -425,8 +461,9 @@ def _litgrapheDOT(s,i):
                 # attributs d'un nœud
                 attr,i = _attributs(s,i)
                 if "fillcolor" in attr:
-                    couleurSommet = attr["fillcolor"]
+                    couleurSommet = attr.pop("fillcolor")
                     couleurs += [(mot, couleurSommet)]
+                nodeattr += [ ( mot, _drawopts(attr) ) ]
                 mot,i = _mot(s,i)
             elif mot2 == '--' or mot2 == '->':
                 # Un chemin
@@ -440,14 +477,21 @@ def _litgrapheDOT(s,i):
                     mot,i = _mot(s,i)
                 chemins += [chemin]
                 if mot == '[':
-                    # attributs d'un chemin, ignore
+                    # attributs d'un chemin
                     attr,i = _attributs(s,i)
+                    attrs = _drawopts(attr)
+                    last = chemin[0]
+                    for x in chemin[1:]:
+                        edgeattr += [ (last, x, attrs) ]
+                        last = x
                     mot,i = _mot(s,i)
             elif mot2 == '=':
                 # attribut par défaut
                 mot3,i = _mot(s,i)
                 if mot == 'fillcolor':
                     couleurDefautSommet = mot3
+                else:
+                    defattr += [ mot + '=' + mot3 ]
                 mot,i = _mot(s,i)
             elif mot2 == ';':
                 # Rien d'intéressant, en fait
@@ -456,7 +500,7 @@ def _litgrapheDOT(s,i):
                 raise SyntaxError("Fichier non supporté: trouvé "+mot2+" à "+str(i))
         while mot == ';':
             mot,i = _mot(s,i)
-    return nom,chemins,couleurs,i
+    return nom,chemins,couleurs,nodeattr,edgeattr,defattr,i
 
 def _litgrapheGML(s,i):
     chemins = []
@@ -572,6 +616,36 @@ def _litgraphePAJ(s,i):
 
     return "graphe",chemins,couleurs,i
 
+def _litgrapheGRF(s,i):
+    chemins = []
+    couleurs = []
+    noms = {}
+
+    nbvert,i = _mot_int(s,i)
+    nbedge,i = _mot_int(s,i)
+
+    # 0 ou 1
+    base,i = _mot_int(s,i)
+    options,i = _mot_int(s,i)
+    vertwei = options % 10 != 0
+    options /= 10
+    edgewei = options % 10 != 0
+    options /= 10
+    labels = options % 10 != 0
+
+    for line in range(nbvert):
+        if labels:
+            nom,i = _mot(s,i)
+        else:
+            nom = str(line)
+        noms[nom] = nom
+        deg,i = _mot_int(s,i)
+        for d in range(deg):
+            neigh,i = _mot(s,i)
+            chemins += [[nom,neigh]]
+
+    return "graphe",chemins,couleurs,i
+
 # Parsing
 def ouvrirGraphe(nom):
     f = open(nom)
@@ -585,9 +659,21 @@ def ouvrirGraphe(nom):
         # .gml format
         creator,i = _mot(s,i)
         nom,chemins,couleurs,i = _litgrapheGML(s,i)
+        nodeattr = []
+        edgeattr = []
+        defattr = []
     elif graph == "*":
         # .paj format
         nom,chemins,couleurs,i = _litgraphePAJ(s,i)
+        nodeattr = []
+        edgeattr = []
+        defattr = []
+    elif graph == "0":
+        # .grf format
+        nom,chemins,couleurs,i = _litgrapheGRF(s,i)
+        nodeattr = []
+        edgeattr = []
+        defattr = []
     else:
         if graph == "strict":
             graph,i = _mot(s,i)
@@ -598,12 +684,22 @@ def ouvrirGraphe(nom):
         else:
             raise SyntaxError("Fichier graphe de type "+graph+" non supporté")
 
-        nom,chemins,couleurs,i = _litgrapheDOT(s,i)
+        nom,chemins,couleurs,nodeattr,edgeattr,defattr,i = _litgrapheDOT(s,i)
     #print("construction")
     g = construireGraphe(chemins, nom)
     #print("coloration")
     for (s,c) in couleurs:
         colorierSommet(sommetNom(g,s),c)
+    for (s,attrs) in nodeattr:
+        sommetNom(g,s).drawopts += attrs
+    for (n1,n2,attrs) in edgeattr:
+        s1 = sommetNom(g,n1)
+        for a in listeAretesIncidentes(s1):
+            s2 = sommetVoisin(s1,a)
+            if nomSommet(s2) == n2:
+                a.drawopts += " " + attrs
+    for attrs in defattr:
+        g.drawopts += attrs + ";\n"
     #print("fini")
     return g
 

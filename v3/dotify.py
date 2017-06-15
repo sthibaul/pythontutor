@@ -94,13 +94,13 @@ def dotify (G, etiquettesAretes = True, colormark = 'Black', suffixe = 'dot'):
                 fontcolor = "white"
             else:
                 fontcolor = "black"
-            f.write ('  %s [style = filled, peripheries = %s, fillcolor = %s, fontcolor = %s, color = %s] %s;\n' %
-                     (snom, entoure, s.color, fontcolor, bord, s.drawopts))
+            f.write ('  %s %s [style = filled, peripheries = %s, fillcolor = %s, fontcolor = %s, color = %s];\n' %
+                     (snom, s.drawopts, entoure, s.color, fontcolor, bord))
         elif s.mark:
 ##            f.write ('  ' + snom + ' [peripheries = 2, color = ' + bord + ']' +
 ##                     s.drawopts + ';\n');
-            f.write ('  %s [peripheries = 2, color = %s] %s;\n' %
-                     (snom, bord, s.drawopts))
+            f.write ('  %s %s [peripheries = 2, color = %s];\n' %
+                     (snom, s.drawopts, bord))
         elif d == 0 or s.drawopts:
             f.write ('  ' + snom + s.drawopts + ';\n')
             
