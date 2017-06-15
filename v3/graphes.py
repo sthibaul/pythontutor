@@ -1,6 +1,7 @@
 # coding=utf-8
 # NOTE: on évite d'importer n'importe quoi comme module, pour ne pas laisser un utilisateur écrire des fichiers ou autre !
 import random
+import resource
 
 #from random import randrange
 
@@ -648,7 +649,15 @@ def _litgrapheGRF(s,i):
 
 # Parsing
 def ouvrirGraphe(nom):
+    l = ["cube.dot", "dodecaedre.dot", "ethanol.dot", "europe.dot", "fig32.dot", "hypercubeDim3.dot", "isocaedre.dot", "koenigsberg.dot", "menthol-buggy.dot", "menthol.dot", "methanol.dot", "octaedre.dot", "petersen.dot", "tetraedre.dot", "tgv2005.dot"]
+    if not nom in l:
+        raise ValueError("Seuls les graphes fournis sont autorisés)"
+    (soft,maximum) = resource.getrlimit(resource.RLIMIT_NOFILE)
+    if soft == 0:
+        resource.setrlimit(resource.RLIMIT_NOFILE, (maximum,maximum))
     f = open(nom)
+    if soft == 0:
+        resource.setrlimit(resource.RLIMIT_NOFILE, (0,maximum))
     s = f.read()
     i = 0
 
