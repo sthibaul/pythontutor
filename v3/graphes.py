@@ -432,7 +432,7 @@ def _litgrapheDOT(s,i):
             defattr += [ mot + _drawopts(attr) ]
             mot,i = _mot(s,i)
 
-        elif mot == "start":
+        elif mot == "start" or mot == "rankdir":
             # attribut d'un graphe
             equal,j = _mot(s,i)
             if equal != '=':
