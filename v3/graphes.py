@@ -651,7 +651,7 @@ def _litgrapheGRF(s,i):
 def ouvrirGraphe(nom):
     l = ["cube.dot", "dodecaedre.dot", "ethanol.dot", "europe.dot", "fig32.dot", "hypercubeDim3.dot", "isocaedre.dot", "koenigsberg.dot", "menthol-buggy.dot", "menthol.dot", "methanol.dot", "octaedre.dot", "petersen.dot", "tetraedre.dot", "tgv2005.dot"]
     if not nom in l:
-        raise ValueError("Seuls les graphes fournis sont autorisés)"
+        raise ValueError("Seuls les graphes fournis sont autorisés")
     (soft,maximum) = resource.getrlimit(resource.RLIMIT_NOFILE)
     if soft == 0:
         resource.setrlimit(resource.RLIMIT_NOFILE, (maximum,maximum))
