@@ -24,6 +24,8 @@ def melange (u):
     return v
 
 def elementAleatoireListe(u):
+    if u.__class__.__name__ != 'list':
+        raise ErreurParametre(u, "une liste")
   # u est une liste
   # La fonction renvoie un element pris au hasard de la liste u si 
   # elle est non-vide. Si u est vide, la fonction renvoie une 
@@ -712,11 +714,11 @@ def ouvrirGraphe(nom):
     #print("fini")
     return g
 
-fig32 = construireGraphe (
-    [ ['A', 'B', 'A', 'C', 'D'],
-      ['B', 'B'], # boucle
-      ['D', 'D', 'D'] # boucles
-    ], "fig32")
+# fig32 = construireGraphe (
+#     [ ['A', 'B', 'A', 'C', 'D'],
+#       ['B', 'B'], # boucle
+#       ['D', 'D', 'D'] # boucles
+#     ], "fig32")
 
 # Construction ad hoc pour indiquer a Graphviz (algo 'neato')
 # les longueurs des aretes
@@ -744,13 +746,13 @@ def _makePetersen ():
         a.drawopts = '[len = 1]'
     return g
 
-Petersen = _makePetersen ()
+#Petersen = _makePetersen ()
 
-Koenigsberg = construireGraphe (
-    [ ['A', 'B', 'C', 'D', 'B', 'A', 'D'],
-      ['B', 'C']
-    ], "Koenigsberg")
-Koenigsberg.drawopts = 'rankdir=LR'
+# Koenigsberg = construireGraphe (
+#     [ ['A', 'B', 'C', 'D', 'B', 'A', 'D'],
+#       ['B', 'C']
+#     ], "Koenigsberg")
+# Koenigsberg.drawopts = 'rankdir=LR'
 
 
 
@@ -759,30 +761,30 @@ Koenigsberg.drawopts = 'rankdir=LR'
 # Construction en etoile: Paris, Nantes, Lyon, etc. sont les voisins de Lille
 # -> dernier parametre = False
 # Les etiquettes des aretes ne servent a rien mais ne mangent pas de pain
-tgv2005 = construireGraphe (
-    [["Lille",
-      ["Paris", "1h00"], ["Nantes", "4h10"], ["Lyon", "2h50"],
-      ["Bordeaux", "5h00"], ["Toulouse", "8h20"],
-      ["Marseille", "4h30"], ["Montpellier", "4h40"]],
-     ["Paris",
-      ["Nantes", "2h00"], ["Lyon", "1h55"], ["Bordeaux", "2h55"],
-      ["Marseille", "2h56"], ["Montpellier", "3h15"],
-      ["Toulouse", "5h14"]],
-     ["Nantes", ["Lyon", "4h20"], ["Marseille", "6h20"]],
-     ["Lyon",
-      ["Toulouse", "4h30"], ["Marseille", "1h20"],
-      ["Montpellier", "1h45"]],
-     ["Bordeaux", ["Toulouse", "2h10"]],
-     ["Toulouse", ["Montpellier", "2h16"]],
-     ["Strasbourg"]
-    ], "tgv2005", chemins = False)
+# tgv2005 = construireGraphe (
+#     [["Lille",
+#       ["Paris", "1h00"], ["Nantes", "4h10"], ["Lyon", "2h50"],
+#       ["Bordeaux", "5h00"], ["Toulouse", "8h20"],
+#       ["Marseille", "4h30"], ["Montpellier", "4h40"]],
+#      ["Paris",
+#       ["Nantes", "2h00"], ["Lyon", "1h55"], ["Bordeaux", "2h55"],
+#       ["Marseille", "2h56"], ["Montpellier", "3h15"],
+#       ["Toulouse", "5h14"]],
+#      ["Nantes", ["Lyon", "4h20"], ["Marseille", "6h20"]],
+#      ["Lyon",
+#       ["Toulouse", "4h30"], ["Marseille", "1h20"],
+#       ["Montpellier", "1h45"]],
+#      ["Bordeaux", ["Toulouse", "2h10"]],
+#      ["Toulouse", ["Montpellier", "2h16"]],
+#      ["Strasbourg"]
+#     ], "tgv2005", chemins = False)
 
 
-hypercubeDim3 = construireGraphe (
-    [['v0', 'v1', 'v3', 'v2', 'v0', 'v4', 'v5', 'v6', 'v7', 'v4'], 
-    ['v1', 'v5'],
-    ['v3', 'v6'],
-    ['v2', 'v7']], "hypercubeDim3")
+# hypercubeDim3 = construireGraphe (
+#     [['v0', 'v1', 'v3', 'v2', 'v0', 'v4', 'v5', 'v6', 'v7', 'v4'], 
+#     ['v1', 'v5'],
+#     ['v3', 'v6'],
+#     ['v2', 'v7']], "hypercubeDim3")
 
 
 # hypercubeDim3 = construireGraphe ([
@@ -806,31 +808,31 @@ hypercubeDim3 = construireGraphe (
 # -> dernier parametre = False
 # Attention: Graphviz ne supporte pas les lettres accentuees !
 # Les numeros des couches font reference a l'algorithme 'dot'
-Europe = construireGraphe ( [
-    ["Portugal","Espagne"],     # couches 0 et 1
-    ["France", "Espagne"],      # couche 2
-    ["Belgique", "France"],     # couche 3
-    ["Pays Bas", "Belgique"],   # couche 4
-    ["Allemagne", "France", "Belgique", "Pays Bas"],    # couche 5
-    ["Danemark", "Allemagne"],  # couche 6
-    ["Pologne", "Allemagne"],   # couche 6
-    ["Italie", "France"],       # couche 3
-    ["Autriche", "Allemagne", "Italie"],    #couche 6
-    ["Tchequie", "Pologne", "Allemagne", "Autriche"],   # couche 7
-    # ce qui suit est la verite, mais 'dot' fait alors plonger
-    # le Danemark au milieu du graphe, too bad
-    ["Slovaquie", "Tchequie", "Autriche", "Pologne"],   # couche 8
-    ["Hongrie", "Autriche", "Slovaquie"],   # couche 9
-    ["Ukraine", "Pologne", "Slovaquie", "Hongrie"], # couche 10
-    ["Roumanie", "Hongrie", "Ukraine"],     # couche 11
-    ["Angleterre", "Pays de Galles", "Ecosse"],
-    ["Irlande"],
-    ["Finlande", "Suede", "Norvege"],
-    ["Suede", "Norvege"] ], "Europe", chemins = False)
+# Europe = construireGraphe ( [
+#     ["Portugal","Espagne"],     # couches 0 et 1
+#     ["France", "Espagne"],      # couche 2
+#     ["Belgique", "France"],     # couche 3
+#     ["Pays Bas", "Belgique"],   # couche 4
+#     ["Allemagne", "France", "Belgique", "Pays Bas"],    # couche 5
+#     ["Danemark", "Allemagne"],  # couche 6
+#     ["Pologne", "Allemagne"],   # couche 6
+#     ["Italie", "France"],       # couche 3
+#     ["Autriche", "Allemagne", "Italie"],    #couche 6
+#     ["Tchequie", "Pologne", "Allemagne", "Autriche"],   # couche 7
+#     # ce qui suit est la verite, mais 'dot' fait alors plonger
+#     # le Danemark au milieu du graphe, too bad
+#     ["Slovaquie", "Tchequie", "Autriche", "Pologne"],   # couche 8
+#     ["Hongrie", "Autriche", "Slovaquie"],   # couche 9
+#     ["Ukraine", "Pologne", "Slovaquie", "Hongrie"], # couche 10
+#     ["Roumanie", "Hongrie", "Ukraine"],     # couche 11
+#     ["Angleterre", "Pays de Galles", "Ecosse"],
+#     ["Irlande"],
+#     ["Finlande", "Suede", "Norvege"],
+#     ["Suede", "Norvege"] ], "Europe", chemins = False)
 
-Europe.drawopts = 'rankdir=LR ratio=.5 node[shape=box style=rounded]'
+# Europe.drawopts = 'rankdir=LR ratio=.5 node[shape=box style=rounded]'
 
-listeGraphes = [tgv2005, fig32, Europe, Koenigsberg, Petersen, hypercubeDim3]
+# listeGraphes = [tgv2005, fig32, Europe, Koenigsberg, Petersen, hypercubeDim3]
 
 ############# A partir d'ici graphes graphes parametres ###########
 #############   construits sur des modeles reguliers    ###########
