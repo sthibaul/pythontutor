@@ -43,7 +43,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 var originFrontendJsFile = 'opt-frontend.js';
 
-var activateSyntaxErrorSurvey = true; // true;
+var activateSyntaxErrorSurvey = false; // true;
 
 function startSharedSession() { // override default
   $("#ssDiv,#surveyHeader").hide(); // hide ASAP!
