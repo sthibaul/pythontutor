@@ -5,7 +5,7 @@ from PIL.Image import *
 
 def ouvrirImage(nom):
     """ Ouvre le fichier nom et retourne l’image contenue de dans (par exemple open('teapot.png') """
-    return Image.open(nom)
+    return open(nom)
 
 def ecrireImage(img, nom):
     """Sauvegarde l’image img dans le fichier nom """
@@ -13,7 +13,7 @@ def ecrireImage(img, nom):
 
 def nouvelleImage(largeur, hauteur):
     """ Retourne une image de taille largeur × hauteur, initialement noire """
-    return Image.new ("RGB", (largeur, hauteur))
+    return new ("RGB", (largeur, hauteur))
 
 def afficherImage(img):
     """ Affiche l’image img """
