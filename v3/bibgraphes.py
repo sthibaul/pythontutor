@@ -6,7 +6,7 @@ import resource
 #from random import randrange
 
 #if sys.hexversion < 3 << 24:
-#    print("graphes ne fonctionne qu'avec idle3 (python3), pas avec idle (python)")
+#    print("bibgraphes ne fonctionne qu'avec idle3 (python3), pas avec idle (python)")
 #    sys.exit(1)
 
 # Attention, eviter que les deux noms globaux qui suivent
@@ -24,8 +24,10 @@ def melange (u):
     return v
 
 def elementAleatoireListe(u):
+    if u.__class__.__name__ == 'range':
+        u = list(u)
     if u.__class__.__name__ != 'list':
-        raise ErreurParametre(u, "une liste")
+        raise __ErreurParametre(u, "une liste")
   # u est une liste
   # La fonction renvoie un element pris au hasard de la liste u si 
   # elle est non-vide. Si u est vide, la fonction renvoie une 
@@ -37,32 +39,32 @@ def elementAleatoireListe(u):
 # Changelog JB
 #   Ete 2009
 #     Grand nettoyage et adaptation a Python 3
-#   Septembre 2009: variable globale plateforme
+#   Septembre 2009: variable globale __plateforme
 #     evite deux appels systeme a chaque dessin
 #     simplification des fonctions Graphviz et dessinerGraphe
 #     (suggestions Jean-Claude Ville)
 #   Octobre 2009: utilisation de la mise en forme de chaines
 #     (format % valeurs) pour simplifier les representations de classes
-#     (methodes __repr__) et la fonction 'dotify'
+#     (methodes __repr__) et la fonction '__dotify'
 #   Janvier 2010: fonction 'voisinPar' -> 'sommetVoisin'
 
 ################ PRIMITIVES GRAPHE   #################################
 
 def nomGraphe(G):
-    verif_type_graphe(G)
+    __verif_type_graphe(G)
     return G.label
 
 def listeSommets(G):
-    verif_type_graphe(G)
+    __verif_type_graphe(G)
     return G.nodes
 
 def nbSommets(G):
-    verif_type_graphe(G)
+    __verif_type_graphe(G)
     return len(listeSommets(G))
 
 def sommetNom(G, etiquette):
-    verif_type_graphe(G)
-    verif_type_chaine(etiquette)
+    __verif_type_graphe(G)
+    __verif_type_nomsommet(etiquette)
     for s in listeSommets(G):
         if s.label== etiquette:
             return s
@@ -73,34 +75,34 @@ def sommetNom(G, etiquette):
     raise Exception("le graphe " + nomGraphe(G) + " ne possède pas de sommet d'étiquette '" + etiquette + "'.")
 
 def sommetNumero(G, i):
-    verif_type_graphe(G)
+    __verif_type_graphe(G)
     return listeSommets(G)[i]
 
 ################# PRIMITIVES SOMMET   ###################################
 
 def nomSommet(s):
-    verif_type_sommet(s)
+    __verif_type_sommet(s)
     return s.label
 
 def marquerSommet(s):
-    verif_type_sommet(s)
+    __verif_type_sommet(s)
     s.mark = True
 
 def demarquerSommet(s):
-    verif_type_sommet(s)
+    __verif_type_sommet(s)
     s.mark = False
 
 def estMarqueSommet(s):
-    verif_type_sommet(s)
+    __verif_type_sommet(s)
     return s.mark
 
 def colorierSommet(s, c):
-    verif_type_sommet(s)
-    verif_type_couleur(c)
+    __verif_type_sommet(s)
+    __verif_type_couleur(c)
     s.color = c
 
 def couleurSommet(s):
-    verif_type_sommet(s)
+    __verif_type_sommet(s)
     return s.color
 
 ##Dans cette version on ne colorie pas les aretes
@@ -109,18 +111,18 @@ def couleurSommet(s):
     
 # Ici les choses serieuses
 def listeAretesIncidentes(s):
-    verif_type_sommet(s)
+    __verif_type_sommet(s)
     return s.edges
 
 def areteNumero(s, i):
     return listeAretesIncidentes(s)[i]
 
 def degre(s) :
-    verif_type_sommet(s)
+    __verif_type_sommet(s)
     return len(listeAretesIncidentes(s)) 
 
 def listeVoisins(s):
-    verif_type_sommet(s)
+    __verif_type_sommet(s)
     inc = listeAretesIncidentes(s)
     v = []
     for a in inc:
@@ -134,8 +136,8 @@ def voisinNumero(s, i):
     return listeVoisins(s)[i]
 
 def sommetVoisin(s, a):
-    verif_type_sommet(s)
-    verif_type_arete(a)
+    __verif_type_sommet(s)
+    __verif_type_arete(a)
     if a.start == s:
         return a.end
     if a.end == s:
@@ -145,28 +147,28 @@ def sommetVoisin(s, a):
 ################ PRIMITIVES arete ########################
 
 def nomArete(a):
-    verif_type_arete(a)
+    __verif_type_arete(a)
     return a.label
 
 def marquerArete(a):
-    verif_type_arete(a)
+    __verif_type_arete(a)
     a.mark = True
 
 def demarquerArete(a):
-    verif_type_arete(a)
+    __verif_type_arete(a)
     a.mark = False
 
 def estMarqueeArete(a):
-    verif_type_arete(a)
+    __verif_type_arete(a)
     return a.mark
 
 def numeroterArete(a, n):
-    verif_type_arete(a)
+    __verif_type_arete(a)
     a.label = str(n)
 
 ################ Classes ########################
 
-class c_graph:
+class __c_graph:
     def __init__(self, label = '', drawopts = ''):
         self.nodes = []
         self.label = label
@@ -174,7 +176,7 @@ class c_graph:
     def __repr__(self):
         return "<graphe: '%s'>" % self.label
 
-class c_node:
+class __c_node:
     def __init__(self, label = '', color = 'white', mark = False, drawopts = ''):
         self.label = label
         self.color = color
@@ -185,7 +187,7 @@ class c_node:
         c = "'" + self.color + "'"
         return "<sommet: '%s', %s, %s>" % (self.label, c, self.mark)
 
-class c_edge:
+class __c_edge:
     def __init__(self, label = '', start = None, end = None, mark = False, drawopts = ''):
         self.label = label
         self.start = start
@@ -197,31 +199,40 @@ class c_edge:
 
 ################ Verifications de types ########################
 
-def verif_type_graphe(G):
-    if G.__class__.__name__ != 'c_graph':
-        raise ErreurParametre(G, "un graphe")
+def __verif_type_graphe(G):
+    if G.__class__.__name__ != '__c_graph':
+        if (type(G) == str):
+            raise TypeError("'" + G + "' est une chaine de caracteres alors que la fonction attend un graphe. Peut-etre voulez-vous utiliser la fonction ouvrirGraphe(G)?")
+        elif (type(G) == _io.TextIOWrapper):
+            raise TypeError("'" + str(G) + "' est un fichier ouvert alors que la fonction attend un graphe. Peut-etre voulez-vous utiliser la fonction ouvrirGraphe(G)?")
+        else:
+            raise __ErreurParametre(G, "un graphe")
     
-def verif_type_sommet(s):
-    if s.__class__.__name__ != 'c_node':
+def __verif_type_sommet(s):
+    if s.__class__.__name__ != '__c_node':
         if (type(s) == str):
             raise TypeError("'" + s + "' est une chaine de caracteres alors que la fonction attend un sommet. Peut-etre voulez-vous utiliser la fonction SommetNom(G, etiquette)?")
         else:
-            raise ErreurParametre(s, "un sommet")
+            raise __ErreurParametre(s, "un sommet")
 
-def verif_type_arete(a):
-    if a.__class__.__name__ != 'c_edge':
-        raise ErreurParametre(a, "une arete")
+def __verif_type_arete(a):
+    if a.__class__.__name__ != '__c_edge':
+        raise __ErreurParametre(a, "une arete")
 
-def verif_type_chaine(s):
+def __verif_type_nomfichier(s):
     if type(s) != str:
-        raise ErreurParametre(s, "une chaine de caracteres")
+        raise __ErreurParametre(s, 'un nom de fichier, par exemple "tgv2005.dot"')
 
-def verif_type_couleur(s):
+def __verif_type_nomsommet(s):
     if type(s) != str:
-        raise ErreurParametre(s, "une chaine de caracteres représentant une couleur comme par exemple : ’red’, ’green’, ’blue’, ’white’, ’cyan’ ou ’yellow’.")
+        raise __ErreurParametre(s, 'un nom de sommet, par exemple "Paris"')
+
+def __verif_type_couleur(s):
+    if type(s) != str:
+        raise __ErreurParametre(s, 'une chaine de caracteres représentant une couleur comme par exemple : "red", "green", "blue", "white", "cyan" ou "yellow".')
 
 
-class ErreurParametre (TypeError):
+class __ErreurParametre (TypeError):
     def __init__(self, arg, param):
         self.arg = arg
         self.param = param
@@ -236,7 +247,7 @@ class ErreurParametre (TypeError):
 ############### Construction de graphes  #####################
     
 def _add_edge (G, label, i, j):
-    a = c_edge(label, G.nodes[i], G.nodes[j])
+    a = __c_edge(label, G.nodes[i], G.nodes[j])
     G.nodes[i].edges.append(a)
     G.nodes[j].edges.append(a)
     return a
@@ -248,7 +259,7 @@ def _find_add_node (G, nom):
         if s.label == nom:
             return i
         i = i + 1
-    G.nodes.append (c_node (nom))
+    G.nodes.append (__c_node (nom))
     return i
 
 # Un chemin p est une liste de noms de sommets ['A', 'B', 'C', ...]
@@ -263,7 +274,7 @@ def _find_add_node (G, nom):
 # pour les dessins, eviter les blancs, etc
 
 def construireGraphe (paths, label, chemins = True):
-    G = c_graph(label)
+    G = __c_graph(label)
     
     # Numeroter les aretes a partir de 0 ou 1 en l'absence
     # d'etiquette explicite?
@@ -434,7 +445,7 @@ def _litgrapheDOT(s,i):
             defattr += [ mot + _drawopts(attr) ]
             mot,i = _mot(s,i)
 
-        elif mot == "start" or mot == "rankdir":
+        elif mot == "start" or mot == "rankdir" or mot == "ratio":
             # attribut d'un graphe
             equal,j = _mot(s,i)
             if equal != '=':
@@ -651,6 +662,7 @@ def _litgrapheGRF(s,i):
 
 # Parsing
 def ouvrirGraphe(nom):
+    __verif_type_nomfichier(nom)
     l = ["cube.dot", "dodecaedre.dot", "ethanol.dot", "europe.dot", "fig32.dot", "hypercubeDim3.dot", "isocaedre.dot", "koenigsberg.dot", "menthol-buggy.dot", "menthol.dot", "methanol.dot", "octaedre.dot", "petersen.dot", "tetraedre.dot", "tgv2005.dot"]
     if not nom in l:
         raise ValueError("Seuls les graphes fournis sont autorisés")
@@ -736,7 +748,7 @@ def _makePetersen ():
     # start = germe du generateur aleatoire pour le placement initial des sommets
     # valeurs OK au CREMI [0, 12, 16, 18, 23, 24, 30, 33]
     # start = 4 interessant aussi
-    #if plateforme == 'Windows':
+    #if __plateforme == 'Windows':
     #    g.drawopts = 'edge [len = 2]'
     #else:
     g.drawopts = 'start = 23; edge [len = 2]'
@@ -837,17 +849,17 @@ def _makePetersen ():
 ############# A partir d'ici graphes graphes parametres ###########
 #############   construits sur des modeles reguliers    ###########
 
-# Exemple: prefixer ([0, 1, 2, ...], 's') = ['s0', 's1', 's2', ...]
+# Exemple: __prefixer ([0, 1, 2, ...], 's') = ['s0', 's1', 's2', ...]
 # Fonctionne aussi bien pour les listes de listes
 
 # Attention: le premier sommet doit etre 's0'
 # a cause de la fonction sommetNumero
 
-def prefixer (paths, prefix):
+def __prefixer (paths, prefix):
     e = []
     for p in paths:
         if type (p) == type ([]):
-            e.append (prefixer (p, prefix))
+            e.append (__prefixer (p, prefix))
         else:
             e.append (prefix + str (p))
     return e
@@ -861,7 +873,7 @@ def _complet (n):
     return a
 
 def construireComplet (n):
-    g = prefixer (_complet (n), 's')
+    g = __prefixer (_complet (n), 's')
     # le 'nom' d'un graphe (label) sert aussi de nom de fichier
     # pour les dessins, eviter les blancs, etc
     nom = 'K' + str (n)
@@ -878,7 +890,7 @@ def _biclique (m, n):
     return a
 
 def construireBipartiComplet (m, n):
-    g = prefixer (_biclique (m, n), 's')
+    g = __prefixer (_biclique (m, n), 's')
     # le 'nom' d'un graphe (label) sert aussi de nom de fichier
     # pour les dessins, eviter les blancs, etc
     nom = 'K' + str (m) + 'x' + str(n)
@@ -901,7 +913,7 @@ def _grille (m, n):
     return lignes
 
 def construireGrille (m, n):
-    g = prefixer (_grille (m, n), 's')
+    g = __prefixer (_grille (m, n), 's')
     # le 'nom' d'un graphe (label) sert aussi de nom de fichier
     # pour les dessins, eviter les blancs, etc
     nom = 'grille' + str (m) + 'x' + str(n)
@@ -939,7 +951,7 @@ def _triangle (n):
     return lignes
 
 def construireTriangle (n):
-    g = prefixer (_triangle (n), 's')
+    g = __prefixer (_triangle (n), 's')
     # le 'nom' d'un graphe (label) sert aussi de nom de fichier
     # pour les dessins, eviter les blancs, etc
     nom = 'triangle' + str (n)
@@ -965,7 +977,7 @@ def _arbre (degre, hauteur, origine = 0):
     return a
 
 def construireArbre (degre, hauteur):
-    g = prefixer (_arbre (degre, hauteur), 's')
+    g = __prefixer (_arbre (degre, hauteur), 's')
     # le 'nom' d'un graphe (label) sert aussi de nom de fichier
     # pour les dessins, eviter les blancs, etc
     nom = 'arbre' + str (degre) + 'x' + str(hauteur)
@@ -1005,7 +1017,7 @@ def _dodecaedre ():
     return u
 
 dodecaedre = construireGraphe (
-    prefixer (_dodecaedre (), 's'), 'dodecaedre')
+    __prefixer (_dodecaedre (), 's'), 'dodecaedre')
 dodecaedre.drawopts = 'edge [len = 2]'
 
 def _icosaedre ():
@@ -1015,10 +1027,10 @@ def _icosaedre ():
     return u
 
 icosaedre = construireGraphe (
-    prefixer (_icosaedre (), 's'), 'icosaedre')
+    __prefixer (_icosaedre (), 's'), 'icosaedre')
 icosaedre.drawopts = 'edge [len = 2]'
 
 graphesPlanairesReguliers = [tetraedre, cube, octaedre, dodecaedre, icosaedre]
 
 
-#print("graphes.py")
+#print("bibgraphes.py")
