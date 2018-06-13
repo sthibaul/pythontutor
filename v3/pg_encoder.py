@@ -356,7 +356,7 @@ class ObjectEncoder:
         # http://docs.python.org/release/3.1.5/c-api/capsule.html
         class_name = get_name(type(dat))
 
-      if class_name == "c_graph":
+      if class_name == "__c_graph":
         new_obj.append('IMAGE')
         new_obj.append(nomGraphe(dat))
         new_obj.append("")
