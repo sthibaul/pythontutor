@@ -91,7 +91,7 @@ listeVariablesExclude=[
 "fig22",
 "fig32",
 "glob",
-"graphes",
+"bibgraphes",
 "listeGraphes",
 "ouvrirGraphe",
 "graphesPlanairesReguliers",
@@ -132,6 +132,16 @@ listeVariablesExclude=[
 
 "tempfile",
 "resource",
+
+"bibimages",
+"ouvrirImage",
+"ecrireImage",
+"nouvelleImage",
+"afficherImage",
+"largeurImage",
+"hauteurImage",
+"colorierPixel",
+"couleurPixel",
 
 "Image",
 "PngImagePlugin",
@@ -197,7 +207,7 @@ ALLOWED_STDLIB_MODULE_IMPORTS = ('math', 'random', 'time', 'datetime',
                           'functools', 'itertools', 'operator', 'string',
                           'collections', 're', 'json',
                           'heapq', 'bisect', 'copy', 'hashlib',
-			  'PIL.Image', 'PIL', 'bibV3', 'graphes')
+			  'PIL.Image', 'PIL', 'bibimages', 'bibgraphes')
 
 # allow users to import but don't explicitly import it since it's
 # already been done above

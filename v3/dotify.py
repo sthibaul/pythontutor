@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from graphes import *
+from bibgraphes import *
 import os, platform, subprocess, glob, resource, tempfile
 
 
