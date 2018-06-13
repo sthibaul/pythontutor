@@ -70,6 +70,7 @@ if (window.location.protocol === 'https:') {
   var JAVA_JSONP_ENDPOINT = 'https://cokapi.com:8001/exec_java_jsonp';
   var RUBY_JSONP_ENDPOINT = 'https://cokapi.com:8001/exec_ruby_jsonp';
   var C_JSONP_ENDPOINT = 'https://cokapi.com:8001/exec_c_jsonp';
+  //  var C_JSONP_ENDPOINT = 'https://services.emi.u-bordeaux.fr/pythontutor:8001/exec_c_jsonp';
   var CPP_JSONP_ENDPOINT = 'https://cokapi.com:8001/exec_cpp_jsonp';
 } else {
   var JS_JSONP_ENDPOINT = 'http://104.237.139.253:3000/exec_js_jsonp'; // for deployment
@@ -77,6 +78,7 @@ if (window.location.protocol === 'https:') {
   var JAVA_JSONP_ENDPOINT = 'http://104.237.139.253:3000/exec_java_jsonp'; // for deployment
   var RUBY_JSONP_ENDPOINT = 'http://104.237.139.253:3000/exec_ruby_jsonp'; // for deployment
   var C_JSONP_ENDPOINT = 'http://104.237.139.253:3000/exec_c_jsonp'; // for deployment
+// var C_JSONP_ENDPOINT = 'http://services.emi.u-bordeaux.fr/pythontutor:3000/exec_c_jsonp'; // for deployment
   var CPP_JSONP_ENDPOINT = 'http://104.237.139.253:3000/exec_cpp_jsonp'; // for deployment
 }
 
@@ -1115,7 +1117,8 @@ function getQueryStringOptions() {
   var ril = $.bbq.getState('rawInputLstJSON');
   var testCasesLstJSON = $.bbq.getState('testCasesJSON');
   // note that any of these can be 'undefined'
-  return {preseededCode: $.bbq.getState('code'),
+  return {staticCode:$.bbq.getState('staticCode'),
+	  preseededCode: $.bbq.getState('code'),
           preseededCurInstr: Number($.bbq.getState('curInstr')),
           verticalStack: $.bbq.getState('verticalStack'),
           appMode: $.bbq.getState('mode'),
@@ -1440,7 +1443,112 @@ function optFinishSuccessfulExecution() {
 }
 
 
-// TODO: cut reliance on the nasty rawInputLst global
+function drawVizuFromRaw(dataFromBackend, backendScript, backendOptionsObj,frontendOptionsObj,outputDiv,handleSuccessFunc, handleUncaughtExceptionFunc){
+var trace = dataFromBackend.trace;
+frontendOptionsObj.lang = 'c'
+  var killerException = null;
+  if (!trace || (trace.length == 0) ||(trace[trace.length - 1].event == 'uncaught_exception')) {
+    handleUncaughtExceptionFunc(trace);
+    if (trace.length == 1) {
+      killerException = trace[0]; // killer!
+      setFronendError([trace[0].exception_msg]);
+    }else if (trace.length > 0 && trace[trace.length - 1].exception_msg) {
+      killerException = trace[trace.length - 1]; // killer!
+      setFronendError([trace[trace.length - 1].exception_msg]);
+    }else{
+      setFronendError(["Unknown error. Reload the page and try again. Or report a bug to",
+                           "philip@pgbovine.net by clicking on the 'Generate permanent link'",
+                           "button at the bottom and including a URL in your email."]);
+    }
+  }else {
+    if (frontendOptionsObj.startingInstruction >= trace.length) {
+      frontendOptionsObj.startingInstruction = 0;
+    }
+    if (frontendOptionsObj.runTestCaseCallback) {
+          // hacky! DO NOT actually create a visualization! instead call:
+      frontendOptionsObj.runTestCaseCallback(trace);
+    } else if (frontendOptionsObj.holisticMode) {
+          // do NOT override, or else bad things will happen with
+          // jsPlumb arrows interfering ...
+      delete frontendOptionsObj.visualizerIdOverride;
+      myVisualizer = new HolisticVisualizer(outputDiv, dataFromBackend, frontendOptionsObj);
+    } else {
+      myVisualizer = new ExecutionVisualizer(outputDiv, dataFromBackend, frontendOptionsObj);
+      myVisualizer.add_pytutor_hook("end_updateOutput", function(args) {
+        if (updateOutputSignalFromRemote) {
+              return;
+            }
+            if (typeof TogetherJS !== 'undefined' && TogetherJS.running && !isExecutingCode) {
+              TogetherJS.send({type: "updateOutput", step: args.myViz.curInstr});
+            }
+
+            // debounce to compress a bit ... 250ms feels "right"
+            $.doTimeout('updateOutputLogEvent', 250, function() {
+              var obj = {type: 'updateOutput', step: args.myViz.curInstr,
+                         curline: args.myViz.curLineNumber,
+                         prevline: args.myViz.prevLineNumber};
+              // optional fields
+              if (args.myViz.curLineExceptionMsg) {
+                obj.exception = args.myViz.curLineExceptionMsg;
+              }
+              if (args.myViz.curLineIsReturn) {
+                obj.curLineIsReturn = true;
+              }
+              if (args.myViz.prevLineIsReturn) {
+                obj.prevLineIsReturn = true;
+              }
+              logEventCodeopticon(obj);
+            });
+
+            // 2014-05-25: implemented more detailed tracing for surveys
+            if (args.myViz.creationTime) {
+              var curTs = new Date().getTime();
+
+              var uh = args.myViz.updateHistory;
+              assert(uh.length > 0); // should already be seeded with an initial value
+              if (uh.length > 1) { // don't try to "compress" the very first entry
+                var lastTs = uh[uh.length - 1][1];
+                  // (debounce entries that are less than 1 second apart to
+                    // compress the logs a bit when there's rapid scrubbing or scrolling)
+                if ((curTs - lastTs) < 1000) {
+                  uh.pop(); // get rid of last entry before pushing a new entry
+                }
+              }
+              uh.push([args.myViz.curInstr, curTs]);
+              }
+              return [false]; // pass through to let other hooks keep handling
+              });
+          }
+              // SUPER HACK -- slip in backendOptionsObj as an extra field
+        if (myVisualizer) {
+          myVisualizer.backendOptionsObj = backendOptionsObj;
+        }
+
+        handleSuccessFunc();
+
+        // VERY SUBTLE -- reinitialize TogetherJS so that it can detect
+        // and sync any new elements that are now inside myVisualizer
+        if (typeof TogetherJS !== 'undefined' && TogetherJS.running) {
+          TogetherJS.reinitialize();
+        }
+      }
+
+      doneExecutingCode(); // rain or shine, we're done executing!
+      // run this at the VERY END after all the dust has settled
+
+            if (killerException && (originFrontendJsFile !== 'iframe-embed.js')) {
+        var excObj = {killerException: killerException, myAppState: getAppState()};
+        prevExecutionExceptionObjLst.push(excObj);
+      } else {
+        prevExecutionExceptionObjLst = []; // reset!!!
+      }
+
+      // tricky hacky reset
+      num414Tries = 0;
+    }
+
+
+	// TODO: cut reliance on the nasty rawInputLst global
 function executeCodeAndCreateViz(codeToExec,
                                  backendScript, backendOptionsObj,
                                  frontendOptionsObj,
@@ -1448,6 +1556,7 @@ function executeCodeAndCreateViz(codeToExec,
                                  handleSuccessFunc, handleUncaughtExceptionFunc) {
 
     function execCallback(dataFromBackend) {
+	    var blin = JSON.stringify(dataFromBackend);
       var trace = dataFromBackend.trace;
 
       var killerException = null;
@@ -1685,7 +1794,7 @@ function executeCodeAndCreateViz(codeToExec,
         backendScript === ts_backend_script ||
         backendScript === java_backend_script ||
         backendScript === ruby_backend_script ||
-        backendScript === c_backend_script ||
+     //  backendScript === c_backend_script ||
         backendScript === cpp_backend_script) {
       // hack! should just be a dummy script for logging only
       $.get(backendScript,
@@ -1698,6 +1807,7 @@ function executeCodeAndCreateViz(codeToExec,
 
       // the REAL call uses JSONP
       // http://learn.jquery.com/ajax/working-with-jsonp/
+      console.log(jsonp_endpoint);
       assert(jsonp_endpoint);
       $.ajax({
         url: jsonp_endpoint,

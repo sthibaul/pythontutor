@@ -57,6 +57,7 @@ function iframeHandleUncaughtException(trace) {
 $(document).ready(function() {
   var queryStrOptions = getQueryStringOptions();
 
+  var staticCode = queryStrOptions.staticCode;
   var preseededCode = queryStrOptions.preseededCode;
   var pyState = queryStrOptions.py;
   var verticalStackBool = (queryStrOptions.verticalStack == 'true');
@@ -168,7 +169,7 @@ $(document).ready(function() {
 
   // log a generic AJAX error handler
   $(document).ajaxError(function() {
-    alert("Ugh, Online Python Tutor server error :( Email philip@pgbovine.net");
+//    alert("Ugh, Online Python Tutor server error :( Email philip@pgbovine.net");
   });
 
 
@@ -177,6 +178,18 @@ $(document).ready(function() {
     myVisualizer.redrawConnectors();
   });
 
-
+if(!staticCode)
   executeCodeFromScratch(); // finally, execute code and display visualization
+else{
+	drawVizuFromRaw(JSON.parse(staticCode),backend_script,
+			backendOptionsObj,
+			frontendOptionsObj,
+			'vizDiv',
+			function() { // success
+				if (resizeContainer)
+					resizeContainerNow();
+				myVisualizer.redrawConnectors();
+			},
+			iframeHandleUncaughtException);  
+}
 });
