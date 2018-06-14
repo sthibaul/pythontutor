@@ -82,22 +82,24 @@ def hauteurImage(img):
     return img.height
 
 
-def colorierPixel(img, coord, couleur):
-    """ Peint le pixel coord dans l’image img de la couleur couleur
+def colorierPixel(img, x,y, couleur):
+    """ Peint le pixel de coordonnées (x,y) dans l’image img de la couleur couleur
     Exemple d'utilisation :
-    >>> coloriderPixel(nouvelleImage(300,200), (50,50), (255,255,255))
+    >>> coloriderPixel(nouvelleImage(300,200), 50,50, (255,255,255))
     """
     __verif_type_image(img)
-    __verif_type_coord(coord)
+    __verif_type_entier(x)
+    __verif_type_entier(y)
     __verif_type_couleur(couleur)
-    Image.putpixel(img, coord, couleur)
+    Image.putpixel(img, (x,y), couleur)
 
-def couleurPixel (img, coord):
+def couleurPixel (img, x,y):
     """ Retourne la couleur du pixel (x, y) dans l’image img
     Exemple d'utilisation :
-    >>> couleur = couleurPixel(nouvelleImage(300,200), (50,50))
+    >>> couleur = couleurPixel(nouvelleImage(300,200), 50,50)
     """
     __verif_type_image(img)
-    __verif_type_coord(coord)
-    return Image.getpixel(img, coord)
+    __verif_type_entier(x)
+    __verif_type_entier(y)
+    return Image.getpixel(img, (x,y))
     
