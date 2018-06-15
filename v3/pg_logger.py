@@ -230,6 +230,9 @@ listeVariablesExclude=[
 "ImageTransformHandler",
 "isPath",
 "blend",
+
+"bibcsv",
+"ouvrirCSV",
 ]
 
 
@@ -287,7 +290,7 @@ ALLOWED_STDLIB_MODULE_IMPORTS = ('math', 'random', 'time', 'datetime',
                           'functools', 'itertools', 'operator', 'string',
                           'collections', 're', 'json',
                           'heapq', 'bisect', 'copy', 'hashlib',
-			  'PIL.Image', 'PIL', 'bibimages', 'bibgraphes')
+			  'PIL.Image', 'PIL', 'bibimages', 'bibgraphes', 'bibcsv')
 
 # allow users to import but don't explicitly import it since it's
 # already been done above
