@@ -20,7 +20,7 @@ def __verif_type_chaine(s):
 def ouvrirCSV(nom):
     """ Ouvre le fichier nom et retourne la liste de nombres contenue dedans (par exemple open('notes.csv') """
     __verif_type_chaine(nom)
-    l = ["notes.csv"]
+    l = ["notes.csv", "temperatures.csv"]
     if not nom in l:
         raise ValueError("Seuls les CSV fournis sont autorisés")
     (soft,maximum) = resource.getrlimit(resource.RLIMIT_NOFILE)
@@ -34,10 +34,14 @@ def ouvrirCSV(nom):
         s = str.replace(s, ",", ".")
         s = str.replace(s, "\r", "")
         s = str.replace(s, "\n", "")
-        s = str.replace(s, "\n", "")
+        s = str.replace(s, '"', " ")
+        s = str.replace(s, "'", " ")
+        s = str.replace(s, ";", " ")
+        s = str.strip()
+        if s != "":
         try:
             i = float(s)
         except:
-            raise __ErreurParametre(s, "un nombre")
+            raise __ErreurParametre(s, "un et un seul nombre")
         l.append(i)
     return l
