@@ -37,7 +37,7 @@ def ouvrirCSV(nom):
         s = str.replace(s, '"', " ")
         s = str.replace(s, "'", " ")
         s = str.replace(s, ";", " ")
-        s = str.strip()
+        s = str.strip(s)
         if s != "":
         try:
             i = float(s)
