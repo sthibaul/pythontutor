@@ -39,9 +39,9 @@ def ouvrirCSV(nom):
         s = str.replace(s, ";", " ")
         s = str.strip(s)
         if s != "":
-        try:
-            i = float(s)
-        except:
-            raise __ErreurParametre(s, "un et un seul nombre")
-        l.append(i)
+            try:
+                i = float(s)
+            except:
+                raise __ErreurParametre(s, "un et un seul nombre")
+            l.append(i)
     return l
