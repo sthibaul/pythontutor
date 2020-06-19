@@ -443,7 +443,7 @@ ExecutionVisualizer.prototype.render = function() {
     '<div id="htmlOutputDiv"></div>\
      <div id="progOutputs">\
        <div id="printOutputDocs">Affichage des print (utiliser le coin pour retailler)</div>\n\
-       <textarea id="pyStdout" cols="40" rows="5" wrap="off" readonly></textarea>\
+       <textarea id="pyStdout" cols="100" rows="5" wrap="off" readonly></textarea>\
      </div>';
 
   var codeVizHTML =
