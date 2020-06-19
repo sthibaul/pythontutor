@@ -22,7 +22,7 @@ def ouvrirCSV(nom):
     Par exemple
     >>> l = open('notes.csv')"""
     __verif_type_chaine(nom)
-    l = ["notes.csv"]
+    l = ["notes.csv", "temperatures.csv"]
     if not nom in l:
         raise ValueError("Seuls les CSV fournis sont autorisés")
     (soft,maximum) = resource.getrlimit(resource.RLIMIT_NOFILE)
@@ -41,8 +41,8 @@ def ouvrirCSV(nom):
         s = str.replace(s, ";", " ")
         s = str.strip(s)
         if s != "":
-        try:
-            i = float(s)
+            try:
+                i = float(s)
             except Exception:
                 raise __ErreurParametre(s, "un et un seul nombre")
             liste.append(i)
