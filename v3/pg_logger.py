@@ -94,6 +94,7 @@ listeVariablesExclude=[
 "bibgraphes",
 "listeGraphes",
 "ouvrirGraphe",
+"ecrireGraphe",
 "graphesPlanairesReguliers",
 "Graphviz",
 "hypercubeDim3",
