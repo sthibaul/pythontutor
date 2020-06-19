@@ -140,3 +140,4 @@ def couleurPixel (img, x,y):
     return img.getpixel((x,y))
     
     
+#print("bibimages.py")

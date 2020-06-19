@@ -3,6 +3,15 @@
 import random
 import resource
 
+try:
+    import isnotebook
+    is_notebook = isnotebook.isnotebook()
+    if is_notebook:
+        print("is notebook")
+        import IPython.display
+except Exception:
+    is_notebook = False
+
 #from random import randrange
 
 #if sys.hexversion < 3 << 24:
@@ -15,23 +24,32 @@ import resource
 # on pourrait evidemment ajouter un _ en tete
 
 
+__plateforme = "Linux"
 
 ################ PRIMITIVES GENERIQUES SUR LES LISTES   ##############
 
 def melange (u):
+    """ retourne une copie mélangée aléatoirement de la liste u
+    Exemple d'utilisation :
+
+    >>> l2 = melange(l)"""
     v = u[:] # v est une copie de u, Python c'est fun
     random.shuffle (v)
     return v
 
 def elementAleatoireListe(u):
+    """ Retourne un élément choisi aléatoirement dans la liste
+    Exemple d'utilisation :
+
+    >>> x = elementAleatoireListe(range(6))"""
     if u.__class__.__name__ == 'range':
         u = list(u)
     if u.__class__.__name__ != 'list':
         raise __ErreurParametre(u, "une liste")
-  # u est une liste
-  # La fonction renvoie un element pris au hasard de la liste u si 
-  # elle est non-vide. Si u est vide, la fonction renvoie une 
-  # erreur (exception IndexError)
+    # u est une liste
+    # La fonction renvoie un element pris au hasard de la liste u si 
+    # elle est non-vide. Si u est vide, la fonction renvoie une 
+    # erreur (exception IndexError)
     return random.choice(u)
 
 
@@ -51,18 +69,34 @@ def elementAleatoireListe(u):
 ################ PRIMITIVES GRAPHE   #################################
 
 def nomGraphe(G):
+    """ Retourne le nom du graphe G:
+    Exemple d'utilisation :
+
+    >>> nom = nomgraphe(G)"""
     __verif_type_graphe(G)
     return G.label
 
 def listeSommets(G):
+    """ Retourne la liste des sommets du graphe G:
+    Exemple d'utilisation :
+
+    >>> l = listeSommets(G)"""
     __verif_type_graphe(G)
     return G.nodes
 
 def nbSommets(G):
+    """ Retourne le nombre de sommets du graphe G:
+    Exemple d'utilisation :
+
+    >>> n = nbSommets(G)"""
     __verif_type_graphe(G)
     return len(listeSommets(G))
 
 def sommetNom(G, etiquette):
+    """ Retourne le sommet de G désigné par son nom etiquette
+    Exemple d'utilisation :
+
+    >>> s = sommetNom(mongraphe, "Bordeaux")"""
     __verif_type_graphe(G)
     __verif_type_nomsommet(etiquette)
     for s in listeSommets(G):
@@ -81,27 +115,51 @@ def sommetNumero(G, i):
 ################# PRIMITIVES SOMMET   ###################################
 
 def nomSommet(s):
+    """ Retourne le nom (l'étiquette) du sommet s
+    Exemple d'utilisation :
+
+    >>> nom = nomSommet(s)"""
     __verif_type_sommet(s)
     return s.label
 
 def marquerSommet(s):
+    """ marque le sommet s
+    Exemple d'utilisation :
+
+    >>> marquerSommet(s)"""
     __verif_type_sommet(s)
     s.mark = True
 
 def demarquerSommet(s):
+    """ démarque le sommet s
+    Exemple d'utilisation :
+
+    >>> demarquerSommet(s)"""
     __verif_type_sommet(s)
     s.mark = False
 
 def estMarqueSommet(s):
+    """ retourne True si le sommet s est marqué, False sinon
+    Exemple d'utilisation :
+
+    >>> return estMarqueSommet(s):"""
     __verif_type_sommet(s)
     return s.mark
 
 def colorierSommet(s, c):
+    """ colorie le sommet s avec la couleur c.
+    Exemple d'utilisation :
+
+    >>> colorierSommet(s, "red")"""
     __verif_type_sommet(s)
     __verif_type_couleur(c)
     s.color = c
 
 def couleurSommet(s):
+    """ retourne la couleur du sommet s
+    Exemple d'utilisation :
+
+    >>> c = couleurSommet(s)"""
     __verif_type_sommet(s)
     return s.color
 
@@ -111,6 +169,10 @@ def couleurSommet(s):
     
 # Ici les choses serieuses
 def listeAretesIncidentes(s):
+    """ retourne la liste des arêtes incidentes au sommet s
+    Exemple d'utilisation :
+
+    >>> l = listeAretesIncidentes(s)"""
     __verif_type_sommet(s)
     return s.edges
 
@@ -118,10 +180,18 @@ def areteNumero(s, i):
     return listeAretesIncidentes(s)[i]
 
 def degre(s) :
+    """ retourne le degré du sommet s
+    Exemple d'utilisation :
+
+    >>> d = degre(s)"""
     __verif_type_sommet(s)
     return len(listeAretesIncidentes(s)) 
 
 def listeVoisins(s):
+    """ retourne la liste des voisins du sommet s
+    Exemple d'utilisation :
+
+    >>> l = listeVoisins(s)"""
     __verif_type_sommet(s)
     inc = listeAretesIncidentes(s)
     v = []
@@ -136,29 +206,49 @@ def voisinNumero(s, i):
     return listeVoisins(s)[i]
 
 def sommetVoisin(s, a):
+    """ retourne le sommet voisin du sommet s en suivant l'arêt a
+    Exemple d'utilisation :
+
+    >>> t = sommetvoisin(s,a)"""
     __verif_type_sommet(s)
     __verif_type_arete(a)
     if a.start == s:
         return a.end
     if a.end == s:
         return a.start
-    raise Exception("\n\nle sommet '" + nomSommet(s) + "' n'est pas une extrémité de l'arete ('" + nomSommet(a.start) +"', '"+ nomSommet(a.end) + "').")
+    raise Exception("\n\nle sommet '" + nomSommet(s) + "' n'est pas une extremite de l'arete ('" + nomSommet(a.start) +"', '"+ nomSommet(a.end) + "').")
 
 ################ PRIMITIVES arete ########################
 
 def nomArete(a):
+    """ retourne le nom de l'arête a
+    Exemple d'utilisation :
+
+    >>> nom = nomArete(a)"""
     __verif_type_arete(a)
     return a.label
 
 def marquerArete(a):
+    """ marque l'arête a
+    Exemple d'utilisation :
+
+    >>> marquerArete(a)"""
     __verif_type_arete(a)
     a.mark = True
 
 def demarquerArete(a):
+    """ démarque l'arête a
+    Exemple d'utilisation :
+
+    >>> demarquerArete(a)"""
     __verif_type_arete(a)
     a.mark = False
 
 def estMarqueeArete(a):
+    """ retourne True si l'arête a est marquée, False sinon
+    Exemple d'utilisation :
+
+    >>> return estMarqueeArete(a)"""
     __verif_type_arete(a)
     return a.mark
 
@@ -201,44 +291,43 @@ class __c_edge:
 
 def __verif_type_graphe(G):
     if G.__class__.__name__ != '__c_graph':
-        if (type(G) == str):
+        if isinstance(G, str):
             raise TypeError("'" + G + "' est une chaine de caracteres alors que la fonction attend un graphe. Peut-etre voulez-vous utiliser la fonction ouvrirGraphe(G)?")
-        elif (type(G) == _io.TextIOWrapper):
+        if isinstance(G, _io.TextIOWrapper):
             raise TypeError("'" + str(G) + "' est un fichier ouvert alors que la fonction attend un graphe. Peut-etre voulez-vous utiliser la fonction ouvrirGraphe(G)?")
-        else:
-            raise __ErreurParametre(G, "un graphe")
+        raise __ErreurParametre(G, "un graphe")
     
 def __verif_type_sommet(s):
     if s.__class__.__name__ != '__c_node':
-        if (type(s) == str):
-            raise TypeError("'" + s + "' est une chaine de caracteres alors que la fonction attend un sommet. Peut-etre voulez-vous utiliser la fonction SommetNom(G, etiquette)?")
-        else:
-            raise __ErreurParametre(s, "un sommet")
+        if isinstance(s, str):
+            raise TypeError("'" + s + "' est une chaine de caracteres alors que la fonction attend un sommet. Peut-etre voulez-vous utiliser la fonction sommetNom(G, etiquette)?")
+        raise __ErreurParametre(s, "un sommet")
 
 def __verif_type_arete(a):
     if a.__class__.__name__ != '__c_edge':
         raise __ErreurParametre(a, "une arete")
 
 def __verif_type_nomfichier(s):
-    if type(s) != str:
+    if not isinstance(s, str):
         raise __ErreurParametre(s, 'un nom de fichier, par exemple "tgv2005.dot"')
 
 def __verif_type_nomsommet(s):
-    if type(s) != str:
+    if not isinstance(s, str):
         raise __ErreurParametre(s, 'un nom de sommet, par exemple "Paris"')
 
 def __verif_type_couleur(s):
-    if type(s) != str:
+    if not isinstance(s, str):
         raise __ErreurParametre(s, 'une chaine de caracteres représentant une couleur comme par exemple : "red", "green", "blue", "white", "cyan" ou "yellow".')
 
 
 class __ErreurParametre (TypeError):
     def __init__(self, arg, param):
+        super().__init__(arg)
         self.arg = arg
         self.param = param
     def __str__(self):
         # affichage discutable
-        if type (self.arg) == str:
+        if isinstance (self.arg, str):
             strArg = "'" + self.arg + "'"
         else:
             strArg = str (self.arg)
@@ -286,12 +375,12 @@ def construireGraphe (paths, label, chemins = True):
     nba = 1
     for p in paths:
         labelsource = p[0]
-        i = _find_add_node (G, labelsource);
+        i = _find_add_node (G, labelsource)
         
         # ne pas utiliser 'for a in p' car il faut maintenant ignorer p[0]  
         for k in range (1, len(p)):
             a = p[k]
-            edge_with_label = type(a) == type([])
+            edge_with_label = isinstance(a, list)
             if edge_with_label:
                 labeldestination = a[0]
                 labeledge = a[1]
@@ -305,15 +394,26 @@ def construireGraphe (paths, label, chemins = True):
                 i = j
     return G
 
+############### Dessin du graphe  #####################
+
+def dessinerGraphe (G, etiquettesAretes = False, algo = 'dot', colormark = 'Black'):
+    """ dessine le graphe G
+    Exemple d'utilisation :
+
+    >>> dessinerGraphe(G)"""
+    __verif_type_graphe (G)
+
+    print("dessinerGraphe n'est pas disponible dans PythonTutor, mais vous pouvez voir le graphe ci-dessous")
+
+dessiner = dessinerGraphe
+
 # Cela pourrait être mieux écrit avec des règles standards de lexing/parsing, mais cela évite des dépendances
 
 def _charclass (c):
-    if c >= 'a' and c <= 'z' or \
-           c >= 'A' and c <= 'Z' or \
-           c >= '1' and c <= '9' or \
-           c == '0' or  c == '_' or c == '.':
+    if ('a' <= c <= 'z') or ('A' <= c <= 'Z') or \
+     ('0' <= c <= '9') or c in  ('_', '.'):
         return 'a'
-    if c == '-' or c == '>':
+    if c in ('-', '>'):
         return '-'
     return c
 
@@ -417,6 +517,7 @@ def _drawopts(attributs):
 def _litgrapheDOT(s,i):
     chemins = []
     couleurs = []
+    marks = []
     nodeattr = []
     edgeattr = []
     defattr = []
@@ -433,19 +534,17 @@ def _litgrapheDOT(s,i):
         if mot == "":
             raise SyntaxError("Fichier incorrect: pas d'accolade fermante terminale à la fin du fichier")
 
-        if mot == "graph" or mot == "node" or mot == "edge":
+        if mot in ("graph", "node", "edge"):
             # attributs par défaut
             crochet,j = _mot(s,i)
             if crochet != '[':
                 raise SyntaxError("Fichier incorrect: trouvé "+crochet+" au lieu d'un crochet ouvrant à "+str(i)+' '+str(j))
             i = j
             attr,i = _attributs(s,i)
-            if mot == "node" and "fillcolor" in attr:
-                couleurDefautSommet = attr["fillcolor"]
             defattr += [ mot + _drawopts(attr) ]
             mot,i = _mot(s,i)
 
-        elif mot == "start" or mot == "rankdir" or mot == "ratio":
+        elif mot in ("start", "rankdir", "ratio"):
             # attribut d'un graphe
             equal,j = _mot(s,i)
             if equal != '=':
@@ -457,14 +556,14 @@ def _litgrapheDOT(s,i):
         elif mot == "subgraph":
             # récursion!
             # idéalement il faudrait séparer les espaces de noms de sommets
-            _,chemins_sousgraphe,couleurs_sougraphe,nodeattr_sousgraphe,edgeattr_sousgraphe,defattr_sousgraphe,i = _litgrapheDOT(s,i)
-            couleurs = chemins_sousgraphe + couleurs
+            _,chemins_sousgraphe,couleurs_sousgraphe,marks_sousgraphe,nodeattr_sousgraphe,edgeattr_sousgraphe,defattr_sousgraphe,i = _litgrapheDOT(s,i)
+            couleurs = couleurs_sousgraphe + couleurs
+            marks = marks_sousgraphe + marks
             chemins = chemins_sousgraphe + chemins
             nodeattr = nodeattr_sousgraphe + nodeattr
             edgeattr = edgeattr_sousgraphe + edgeattr
             defattr = defattr_sousgraphe + defattr
             mot,i = _mot(s,i)
-
         else:
             # Nom d'un sommet
             if mot[0] == '"':
@@ -475,15 +574,19 @@ def _litgrapheDOT(s,i):
                 # attributs d'un nœud
                 attr,i = _attributs(s,i)
                 if "fillcolor" in attr:
-                    couleurSommet = attr.pop("fillcolor")
-                    couleurs += [(mot, couleurSommet)]
+                    c = attr.pop("fillcolor")
+                    couleurs += [(mot, c)]
+                if "peripheries" in attr:
+                    c = attr.pop("peripheries")
+                    if c == "2":
+                        marks += [mot]
                 nodeattr += [ ( mot, _drawopts(attr) ) ]
                 mot,i = _mot(s,i)
-            elif mot2 == '--' or mot2 == '->':
+            elif mot2 in ('--', '->'):
                 # Un chemin
                 chemin = [mot]
                 mot = mot2
-                while mot == '--' or mot == '->':
+                while mot in ('--', '->'):
                     mot,i = _mot(s,i)
                     if mot[0] == '"':
                         mot = mot[1:-1]
@@ -502,9 +605,7 @@ def _litgrapheDOT(s,i):
             elif mot2 == '=':
                 # attribut par défaut
                 mot3,i = _mot(s,i)
-                if mot == 'fillcolor':
-                    couleurDefautSommet = mot3
-                else:
+                if mot != 'fillcolor':
                     defattr += [ mot + '=' + mot3 ]
                 mot,i = _mot(s,i)
             elif mot2 == ';':
@@ -514,7 +615,7 @@ def _litgrapheDOT(s,i):
                 raise SyntaxError("Fichier non supporté: trouvé "+mot2+" à "+str(i))
         while mot == ';':
             mot,i = _mot(s,i)
-    return nom,chemins,couleurs,nodeattr,edgeattr,defattr,i
+    return nom,chemins,couleurs,marks,nodeattr,edgeattr,defattr,i
 
 def _litgrapheGML(s,i):
     chemins = []
@@ -529,7 +630,7 @@ def _litgrapheGML(s,i):
     mot,i = _mot(s,i)
     while mot != ']':
         if mot == "directed":
-            oriente,i = _mot(s,i)
+            _,i = _mot(s,i) #oriente,i
             mot,i = _mot(s,i)
         elif mot == "node":
             # un sommet
@@ -548,9 +649,9 @@ def _litgrapheGML(s,i):
                     if nom[0] == '"':
                         nom = nom[1:-1]
                     mot,i = _mot(s,i)
-                elif mot == 'value' or mot == 'source':
+                elif mot in ('value', 'source'):
                     # ignore
-                    value,i = _mot(s,i)
+                    _,i = _mot(s,i)
                     mot,i = _mot(s,i)
                 else:
                     raise SyntaxError('mot-clé de sommet '+mot+' non supporté à '+str(i))
@@ -576,7 +677,7 @@ def _litgrapheGML(s,i):
                     dst,i = _mot(s,i)
                     mot,i = _mot(s,i)
                 elif mot == 'value':
-                    value,i = _mot(s,i)
+                    _,i = _mot(s,i) #value,i
                     mot,i = _mot(s,i)
                 else:
                     raise SyntaxError('mot-clé de sommet '+mot+' non supporté à '+str(i))
@@ -599,9 +700,9 @@ def _litgraphePAJ(s,i):
 
     mot,i = _mot(s,i)
     if mot != "Vertices":
-            raise SyntaxError('Attendu Vertices, trouvé '+mot+' à la place')
+        raise SyntaxError('Attendu Vertices, trouvé '+mot+' à la place')
 
-    nbvert,i = _mot(s,i)
+    _,i = _mot(s,i) # nbvert,i
 
     mot,i = _mot(s,i)
     while mot != "*":
@@ -616,8 +717,8 @@ def _litgraphePAJ(s,i):
         mot,i = _mot(s,i)
 
     mot,i = _mot(s,i)
-    if mot != "Edges" and mot != "Arcs":
-            raise SyntaxError('Attendu Edges ou Arcs, trouvé '+mot+' à la place')
+    if mot in ("Edges", "Arcs"):
+        raise SyntaxError('Attendu Edges ou Arcs, trouvé '+mot+' à la place')
 
     mot,i = _mot(s,i)
     while mot != "":
@@ -636,14 +737,14 @@ def _litgrapheGRF(s,i):
     noms = {}
 
     nbvert,i = _mot_int(s,i)
-    nbedge,i = _mot_int(s,i)
+    _,i = _mot_int(s,i) # nbedge,i
 
     # 0 ou 1
-    base,i = _mot_int(s,i)
+    _,i = _mot_int(s,i) #base,i
     options,i = _mot_int(s,i)
-    vertwei = options % 10 != 0
+    # vertwei = options % 10 != 0
     options /= 10
-    edgewei = options % 10 != 0
+    # edgewei = options % 10 != 0
     options /= 10
     labels = options % 10 != 0
 
@@ -654,7 +755,7 @@ def _litgrapheGRF(s,i):
             nom = str(line)
         noms[nom] = nom
         deg,i = _mot_int(s,i)
-        for d in range(deg):
+        for _ in range(deg):
             neigh,i = _mot(s,i)
             chemins += [[nom,neigh]]
 
@@ -662,6 +763,10 @@ def _litgrapheGRF(s,i):
 
 # Parsing
 def ouvrirGraphe(nom):
+    """ ouvre le fichier nom et retourne le graphe contenu dedans
+    Exemple d'utilisation :
+
+    >>> g = ouvrirGraphe("fichier.dot")"""
     __verif_type_nomfichier(nom)
     l = ["cube.dot", "dodecaedre.dot", "ethanol.dot", "europe.dot", "fig32.dot", "hypercubeDim3.dot", "isocaedre.dot", "koenigsberg.dot", "menthol-buggy.dot", "menthol.dot", "methanol.dot", "octaedre.dot", "petersen.dot", "tetraedre.dot", "tgv2005.dot"]
     if not nom in l:
@@ -675,44 +780,43 @@ def ouvrirGraphe(nom):
     s = f.read()
     i = 0
 
-    couleurDefautSommet = "white"
-
     graph,i = _mot(s,i)
     if graph == "Creator":
         # .gml format
-        creator,i = _mot(s,i)
+        _,i = _mot(s,i) # creator,i
         nom,chemins,couleurs,i = _litgrapheGML(s,i)
+        marks = []
         nodeattr = []
         edgeattr = []
         defattr = []
     elif graph == "*":
         # .paj format
         nom,chemins,couleurs,i = _litgraphePAJ(s,i)
+        marks = []
         nodeattr = []
         edgeattr = []
         defattr = []
     elif graph == "0":
         # .grf format
         nom,chemins,couleurs,i = _litgrapheGRF(s,i)
+        marks = []
         nodeattr = []
         edgeattr = []
         defattr = []
     else:
         if graph == "strict":
             graph,i = _mot(s,i)
-        if graph == "digraph":
-            oriente = True
-        elif graph == "graph":
-            oriente = False
-        else:
+        if graph not in ("digraph", "graph") :
             raise SyntaxError("Fichier graphe de type "+graph+" non supporté")
 
-        nom,chemins,couleurs,nodeattr,edgeattr,defattr,i = _litgrapheDOT(s,i)
+        nom,chemins,couleurs,marks,nodeattr,edgeattr,defattr,i = _litgrapheDOT(s,i)
     #print("construction")
     g = construireGraphe(chemins, nom)
     #print("coloration")
     for (s,c) in couleurs:
         colorierSommet(sommetNom(g,s),c)
+    for s in marks:
+        marquerSommet(sommetNom(g,s))
     for (s,attrs) in nodeattr:
         sommetNom(g,s).drawopts += attrs
     for (n1,n2,attrs) in edgeattr:
@@ -725,6 +829,14 @@ def ouvrirGraphe(nom):
         g.drawopts += attrs + ";\n"
     #print("fini")
     return g
+
+def ecrireGraphe(G, nom):
+    """ sauvegarde le graphe G dans le fichier nom
+    Exemple d'utilisation :
+
+    >>> ecrireGraphe(G, "fichier.dot")"""
+    #__dotify(G, path = nom)
+    print("ecrireGraphe n'est pas disponible dans PythonTutor")
 
 # fig32 = construireGraphe (
 #     [ ['A', 'B', 'A', 'C', 'D'],
@@ -748,10 +860,10 @@ def _makePetersen ():
     # start = germe du generateur aleatoire pour le placement initial des sommets
     # valeurs OK au CREMI [0, 12, 16, 18, 23, 24, 30, 33]
     # start = 4 interessant aussi
-    #if __plateforme == 'Windows':
-    #    g.drawopts = 'edge [len = 2]'
-    #else:
-    g.drawopts = 'start = 23; edge [len = 2]'
+    if __plateforme == 'Windows':
+        g.drawopts = 'edge [len = 2]'
+    else:
+        g.drawopts = 'start = 23; edge [len = 2]'
     for i in range (5):
         s = sommetNumero (g, i)
         a = areteNumero (s, 2)
@@ -858,7 +970,7 @@ def _makePetersen ():
 def __prefixer (paths, prefix):
     e = []
     for p in paths:
-        if type (p) == type ([]):
+        if isinstance (p, list):
             e.append (__prefixer (p, prefix))
         else:
             e.append (prefix + str (p))
@@ -873,6 +985,10 @@ def _complet (n):
     return a
 
 def construireComplet (n):
+    """ retourne le graphe complet K_n
+    Exemple d'utilisation :
+
+    >>> g = construireComplet(5)"""
     g = __prefixer (_complet (n), 's')
     # le 'nom' d'un graphe (label) sert aussi de nom de fichier
     # pour les dessins, eviter les blancs, etc
@@ -890,6 +1006,10 @@ def _biclique (m, n):
     return a
 
 def construireBipartiComplet (m, n):
+    """ retourne le graphe K_m,n
+    Exemple d'utilisation :
+
+    >>> g = construireBipartiComplet(2, 5)"""
     g = __prefixer (_biclique (m, n), 's')
     # le 'nom' d'un graphe (label) sert aussi de nom de fichier
     # pour les dessins, eviter les blancs, etc
@@ -904,7 +1024,7 @@ def construireBipartiComplet (m, n):
 def _grille (m, n):
     lignes = []
     debut = 0
-    for i in range (m):
+    for _ in range (m):
         fin = debut + n
         lignes.append (list(range (debut, fin)))
         debut = fin
@@ -913,6 +1033,10 @@ def _grille (m, n):
     return lignes
 
 def construireGrille (m, n):
+    """ retourne la grille rectangulaire d'ordre n
+    Exemple d'utilisation :
+
+    >>> g = construireGrille(4)"""
     g = __prefixer (_grille (m, n), 's')
     # le 'nom' d'un graphe (label) sert aussi de nom de fichier
     # pour les dessins, eviter les blancs, etc
@@ -951,6 +1075,10 @@ def _triangle (n):
     return lignes
 
 def construireTriangle (n):
+    """ retourne la grille triangulaire d'ordre n
+    Exemple d'utilisation :
+
+    >>> g = construireTriangle(4)"""
     g = __prefixer (_triangle (n), 's')
     # le 'nom' d'un graphe (label) sert aussi de nom de fichier
     # pour les dessins, eviter les blancs, etc
@@ -963,26 +1091,31 @@ def construireTriangle (n):
 
 # Arbres (complets)
 
-def _arbre (degre, hauteur, origine = 0):
+def _arbre (deg, hauteur, origine = 0):
     a = []
     if hauteur == 0:
         return []
-    d = degre ** hauteur
-    d = (d - 1) // (degre - 1)
+    d = deg ** hauteur
+    d = (d - 1) // (deg - 1)
     j = origine + 1
-    for i in range (degre):
+    for _ in range (deg):
         a.append ([origine, j])
-        a = a + _arbre (degre, hauteur - 1, j)
+        a = a + _arbre (deg, hauteur - 1, j)
         j = j + d
     return a
 
-def construireArbre (degre, hauteur):
-    g = __prefixer (_arbre (degre, hauteur), 's')
+def construireArbre (deg, hauteur):
+    """ retourne l'arbre de hauteur h dont chaque sommet possède d fils
+    Exemple d'utilisation :
+
+    >>> g = construireArbre(2, 3)"""
+    g = __prefixer (_arbre (deg, hauteur), 's')
     # le 'nom' d'un graphe (label) sert aussi de nom de fichier
     # pour les dessins, eviter les blancs, etc
-    nom = 'arbre' + str (degre) + 'x' + str(hauteur)
+    nom = 'arbre' + str (deg) + 'x' + str(hauteur)
     g = construireGraphe (g, nom)
     return g
+
 
 # Solides platoniciens
 
@@ -1016,6 +1149,7 @@ def _dodecaedre ():
     u = u + [[5, 14], [6, 16], [8, 17], [10, 18], [12, 19, 15]]
     return u
 
+
 dodecaedre = construireGraphe (
     __prefixer (_dodecaedre (), 's'), 'dodecaedre')
 dodecaedre.drawopts = 'edge [len = 2]'
@@ -1025,6 +1159,7 @@ def _icosaedre ():
     u.append ([2, 0, 3, 8, 11, 6, 1, 5, 0, 4, 9, 3])
     u = u + [[1, 7, 2, 8], [4, 10, 5], [6, 10], [7, 11, 9]]
     return u
+
 
 icosaedre = construireGraphe (
     __prefixer (_icosaedre (), 's'), 'icosaedre')
