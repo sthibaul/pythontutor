@@ -1,6 +1,16 @@
 #-*- coding: utf-8 -*-
 
-from PIL.Image import *
+import PIL.Image
+
+try:
+    import isnotebook
+    is_notebook = isnotebook.isnotebook()
+    if is_notebook:
+        print("is notebook")
+        import IPython.display
+except Exception:
+    is_notebook = False
+
 
 
 class __ErreurParametre (TypeError):
@@ -9,18 +19,18 @@ class __ErreurParametre (TypeError):
         self.param = param
     def __str__(self):
         # affichage discutable
-        if type (self.arg) == str:
+        if isinstance(self.arg, str):
             strArg = "'" + self.arg + "'"
         else:
             strArg = str (self.arg)
         return "\n\n" + strArg + " n'est pas " + self.param
 
 def __verif_type_image(i):
-    if not "Image" in i.__class__.__name__:
+    if "Image" not in i.__class__.__name__:
         raise __ErreurParametre(i, "une image")
 
 def __verif_type_chaine(s):
-    if type(s) != str:
+    if not isinstance(s, str):
         raise __ErreurParametre(s, "un nom d'image")
 
 def __verif_type_entier(i):
@@ -50,34 +60,58 @@ def __verif_type_couleur(c):
         raise __ErreurParametre(c, "une couleur avec 3 composantes entières")
 
 def ouvrirImage(nom):
-    """ Ouvre le fichier nom et retourne l’image contenue de dans (par exemple open('teapot.png') """
+    """ Ouvre le fichier nom et retourne l’image contenue dedans
+    Par exemple:
+
+    >>> img = ouvrirImage('teapot.png')"""
     __verif_type_chaine(nom)
-    return open(nom)
+    return PIL.Image.open(nom).convert("RGB")
 
 def ecrireImage(img, nom):
-    """Sauvegarde l’image img dans le fichier nom """
+    """Sauvegarde l’image img dans le fichier nom
+    Par exemple:
+
+    >>> ecrireImage(img, "monimage.png")"""
     __verif_type_image(img)
     __verif_type_chaine(nom)
-    Image.save(img, nom)
+    PIL.Image.Image.save(img, nom)
 
 def nouvelleImage(largeur, hauteur):
-    """ Retourne une image de taille largeur × hauteur, initialement noire """
+    """ Retourne une image de taille largeur × hauteur, initialement noire
+    Par exemple:
+
+    >>> img = nouvelleImage(300,200)"""
     __verif_type_entier(largeur)
     __verif_type_entier(hauteur)
-    return new ("RGB", (largeur, hauteur))
+    return PIL.Image.new ("RGB", (largeur, hauteur))
 
 def afficherImage(img):
-    """ Affiche l’image img """
+    """ Affiche l’image img
+    Par exemple:
+
+    >>> afficherImage(img)"""
     __verif_type_image(img)
-    Image.show(img)
+    try:
+        if is_notebook:
+            IPython.display.display(img)
+        else:
+            PIL.Image.Image.show(img)
+    except Exception:
+    	print("Affichage non disponible")
 
 def largeurImage(img):
-    """ Récupère la largeur de img """
+    """ Récupère la largeur de img
+    Par exemple:
+
+    >>> l = largeurImage(img)"""
     __verif_type_image(img)
     return img.width
 
 def hauteurImage(img):
-    """ Récupère la hauteur de img """
+    """ Récupère la hauteur de img
+    Par exemple:
+
+    >>> h = hauteurImage(img)"""
     __verif_type_image(img)
     return img.height
 
@@ -85,21 +119,24 @@ def hauteurImage(img):
 def colorierPixel(img, x,y, couleur):
     """ Peint le pixel de coordonnées (x,y) dans l’image img de la couleur couleur
     Exemple d'utilisation :
-    >>> coloriderPixel(nouvelleImage(300,200), 50,50, (255,255,255))
+
+    >>> colorierPixel(img, 50,50, (255,255,255))
     """
     __verif_type_image(img)
     __verif_type_entier(x)
     __verif_type_entier(y)
     __verif_type_couleur(couleur)
-    Image.putpixel(img, (x,y), couleur)
+    img.putpixel((x,y), couleur)
 
 def couleurPixel (img, x,y):
     """ Retourne la couleur du pixel (x, y) dans l’image img
     Exemple d'utilisation :
-    >>> couleur = couleurPixel(nouvelleImage(300,200), 50,50)
+
+    >>> couleur = couleurPixel(img, 50,50)
     """
     __verif_type_image(img)
     __verif_type_entier(x)
     __verif_type_entier(y)
-    return Image.getpixel(img, (x,y))
+    return img.getpixel((x,y))
+    
     
