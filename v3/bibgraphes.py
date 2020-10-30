@@ -5,12 +5,12 @@ import resource
 
 try:
     import isnotebook
-    is_notebook = isnotebook.isnotebook()
-    if is_notebook:
+    _is_notebook = isnotebook.isnotebook()
+    if _is_notebook:
         print("is notebook")
         import IPython.display
 except Exception:
-    is_notebook = False
+    _is_notebook = False
 
 #from random import randrange
 
@@ -25,6 +25,19 @@ except Exception:
 
 
 __plateforme = "Linux"
+
+
+def _errMaj(wrong, right):
+    raise Exception("Attention aux majuscules/minuscules: la fonction " + wrong + " n'existe pas, c'est la fonction " + right + " qui existe")
+
+def _errS(wrong, right):
+    raise Exception("Attention aux s: la fonction " + wrong + " n'existe pas, c'est la fonction " + right + " qui existe")
+
+def _errOrtho(wrong, right):
+    raise Exception("Attention à l'orthographe: la fonction " + wrong + " n'existe pas, c'est la fonction " + right + " qui existe")
+
+def _errAccents(wrong, right):
+    raise Exception("Attention à ne pas utiliser d'accent dans Python : la fonction " + wrong + " n'existe pas, c'est la fonction " + right + " qui existe")
 
 ################ PRIMITIVES GENERIQUES SUR LES LISTES   ##############
 
@@ -84,6 +97,15 @@ def listeSommets(G):
     __verif_type_graphe(G)
     return G.nodes
 
+def listesommets(G):
+    _errMaj("listesommets", "listeSommets")
+def ListeSommets(G):
+    _errMaj("ListeSommets", "listeSommets")
+def listeSommet(G):
+    _errS("listeSommet", "listeSommets")
+def listesommet(G):
+    _errS("listesommet", "listeSommets")
+
 def nbSommets(G):
     """ Retourne le nombre de sommets du graphe G:
     Exemple d'utilisation :
@@ -91,6 +113,15 @@ def nbSommets(G):
     >>> n = nbSommets(G)"""
     __verif_type_graphe(G)
     return len(listeSommets(G))
+
+def nbsommets(G):
+    _errMaj("nbsommets", "nbSommets")
+def NbSommets(G):
+    _errMaj("NbSommets", "nbSommets")
+def nbSommet(G):
+    _errS("nbSommet", "nbSommets")
+def nbsommet(G):
+    _errS("nbsommet", "nbSommets")
 
 def sommetNom(G, etiquette):
     """ Retourne le sommet de G désigné par son nom etiquette
@@ -107,6 +138,15 @@ def sommetNom(G, etiquette):
             raise Exception("le graphe " + nomGraphe(G) + " ne possède pas de sommet d'étiquette '" + etiquette + "'."\
                              " En revanche il possède un sommet d'étiquette '" + s.label + "'. Remarquez la différence majuscule/minuscule.")
     raise Exception("le graphe " + nomGraphe(G) + " ne possède pas de sommet d'étiquette '" + etiquette + "'.")
+
+def sommetnom(G, etiquette):
+    _errMaj("sommetnom", "sommetNom")
+def SommetNom(G, etiquette):
+    _errMaj("SommetNom", "sommetNom")
+def sommetsNom(G, etiquette):
+    _errS("sommetsNom", "sommetNom")
+def sommetsnom(G, etiquette):
+    _errS("sommetsnom", "sommetNom")
 
 def sommetNumero(G, i):
     __verif_type_graphe(G)
@@ -130,6 +170,15 @@ def marquerSommet(s):
     __verif_type_sommet(s)
     s.mark = True
 
+def marquersommet(s):
+    _errMaj("marquersommet", "marquerSommet")
+def MarquerSommet(s):
+    _errMaj("MarquerSommet", "marquerSommet")
+def marquerSommets(s):
+    _errS("marquerSommets", "marquerSommet")
+def marquersommets(s):
+    _errS("marquersommets", "marquerSommet")
+
 def demarquerSommet(s):
     """ démarque le sommet s
     Exemple d'utilisation :
@@ -138,6 +187,17 @@ def demarquerSommet(s):
     __verif_type_sommet(s)
     s.mark = False
 
+def demarquersommet(s):
+    _errMaj("demarquersommet", "demarquerSommet")
+def DemarquerSommet(s):
+    _errMaj("DemarquerSommet", "demarquerSommet")
+def DeMarquerSommet(s):
+    _errMaj("DeMarquerSommet", "demarquerSommet")
+def demarquerSommets(s):
+    _errS("demarquerSommets", "demarquerSommet")
+def demarquersommets(s):
+    _errS("demarquersommets", "demarquerSommet")
+
 def estMarqueSommet(s):
     """ retourne True si le sommet s est marqué, False sinon
     Exemple d'utilisation :
@@ -145,6 +205,105 @@ def estMarqueSommet(s):
     >>> return estMarqueSommet(s):"""
     __verif_type_sommet(s)
     return s.mark
+
+def estmarquesommet(s):
+    _errMaj("estmarquesommet", "estMarqueSommet")
+def estmarqueSommet(s):
+    _errMaj("estmarqueSommet", "estMarqueSommet")
+def estMarquesommet(s):
+    _errMaj("estMarquesommet", "estMarqueSommet")
+
+def EstMarqueSommet(s):
+    _errMaj("EstMarqueSommet", "estMarqueSommet")
+def Estmarquesommet(s):
+    _errMaj("Estmarquesommet", "estMarqueSommet")
+def EstmarqueSommet(s):
+    _errMaj("EstmarqueSommet", "estMarqueSommet")
+def EstMarquesommet(s):
+    _errMaj("EstMarquesommet", "estMarqueSommet")
+
+def estmarquesommets(s):
+    _errS("estmarquesommets", "estMarqueSommet")
+def estmarqueSommets(s):
+    _errS("estmarqueSommets", "estMarqueSommet")
+def estMarquesommets(s):
+    _errS("estMarquesommets", "estMarqueSommet")
+
+def EstMarqueSommets(s):
+    _errS("EstMarqueSommets", "estMarqueSommet")
+def Estmarquesommets(s):
+    _errS("Estmarquesommets", "estMarqueSommet")
+def EstmarqueSommets(s):
+    _errS("EstmarqueSommets", "estMarqueSommet")
+def EstMarquesommets(s):
+    _errS("EstMarquesommets", "estMarqueSommet")
+
+def estMarquéSommet(s):
+    _errAccent("estMarquéSommet", "estMarqueSommet")
+
+def estmarquésommet(s):
+    _errMaj("estmarquésommet", "estMarqueSommet")
+def estmarquéSommet(s):
+    _errMaj("estmarquéSommet", "estMarqueSommet")
+def estMarquésommet(s):
+    _errMaj("estMarquésommet", "estMarqueSommet")
+
+def EstMarquéSommet(s):
+    _errMaj("EstMarquéSommet", "estMarqueSommet")
+def Estmarquésommet(s):
+    _errMaj("Estmarquésommet", "estMarqueSommet")
+def EstmarquéSommet(s):
+    _errMaj("EstmarquéSommet", "estMarqueSommet")
+def EstMarquésommet(s):
+    _errMaj("EstMarquésommet", "estMarqueSommet")
+
+def estmarquésommets(s):
+    _errS("estmarquésommets", "estMarqueSommet")
+def estmarquéSommets(s):
+    _errS("estmarquéSommets", "estMarqueSommet")
+def estMarquésommets(s):
+    _errS("estMarquésommets", "estMarqueSommet")
+
+def EstMarquéSommets(s):
+    _errS("EstMarquéSommets", "estMarqueSommet")
+def Estmarquésommets(s):
+    _errS("Estmarquésommets", "estMarqueSommet")
+def EstmarquéSommets(s):
+    _errS("EstmarquéSommets", "estMarqueSommet")
+def EstMarquésommets(s):
+    _errS("EstMarquésommets", "estMarqueSommet")
+
+def estmarquersommet(s):
+    _errOrtho("estmarquersommet", "estMarqueSommet")
+def estmarquerSommet(s):
+    _errOrtho("estmarquerSommet", "estMarqueSommet")
+def estMarquersommet(s):
+    _errOrtho("estMarquersommet", "estMarqueSommet")
+
+def EstMarquerSommet(s):
+    _errOrtho("EstMarquerSommet", "estMarqueSommet")
+def Estmarquersommet(s):
+    _errOrtho("Estmarquersommet", "estMarqueSommet")
+def EstmarquerSommet(s):
+    _errOrtho("EstmarquerSommet", "estMarqueSommet")
+def EstMarquersommet(s):
+    _errOrtho("EstMarquersommet", "estMarqueSommet")
+
+def estmarquersommets(s):
+    _errOrtho("estmarquersommets", "estMarqueSommet")
+def estmarquerSommets(s):
+    _errOrtho("estmarquerSommets", "estMarqueSommet")
+def estMarquersommets(s):
+    _errOrtho("estMarquersommets", "estMarqueSommet")
+
+def EstMarquerSommets(s):
+    _errOrtho("EstMarquerSommets", "estMarqueSommet")
+def Estmarquersommets(s):
+    _errOrtho("Estmarquersommets", "estMarqueSommet")
+def EstmarquerSommets(s):
+    _errOrtho("EstmarquerSommets", "estMarqueSommet")
+def EstMarquersommets(s):
+    _errOrtho("EstMarquersommets", "estMarqueSommet")
 
 def colorierSommet(s, c):
     """ colorie le sommet s avec la couleur c.
@@ -155,6 +314,15 @@ def colorierSommet(s, c):
     __verif_type_couleur(c)
     s.color = c
 
+def coloriersommet(s):
+    _errMaj("coloriersommet", "colorierSommet")
+def ColorierSommet(s):
+    _errMaj("ColorierSommet", "colorierSommet")
+def colorierSommets(s):
+    _errS("colorierSommets", "colorierSommet")
+def coloriersommets(s):
+    _errS("coloriersommets", "colorierSommet")
+
 def couleurSommet(s):
     """ retourne la couleur du sommet s
     Exemple d'utilisation :
@@ -162,6 +330,25 @@ def couleurSommet(s):
     >>> c = couleurSommet(s)"""
     __verif_type_sommet(s)
     return s.color
+
+def couleursommet(s):
+    _errMaj("couleursommet", "couleurSommet")
+def CouleurSommet(s):
+    _errMaj("CouleurSommet", "couleurSommet")
+def couleurSommets(s):
+    _errS("couleurSommets", "couleurSommet")
+def couleursommets(s):
+    _errS("couleursommets", "couleurSommet")
+
+def couleurssommet(s):
+    _errS("couleurssommet", "couleurSommet")
+def CouleursSommet(s):
+    _errS("CouleursSommet", "couleurSommet")
+def couleursSommets(s):
+    _errS("couleursSommets", "couleurSommet")
+def couleurssommets(s):
+    _errS("couleurssommets", "couleurSommet")
+
 
 ##Dans cette version on ne colorie pas les aretes
 ##colorier = colorierSommet
@@ -187,6 +374,21 @@ def degre(s) :
     __verif_type_sommet(s)
     return len(listeAretesIncidentes(s)) 
 
+def Degre(s):
+    _errMaj("Degre", "degre")
+def degres(s):
+    _errS("degres", "degre")
+def Degres(s):
+    _errS("Degres", "degre")
+def degré(s):
+    _errAccents("degré", "degre")
+def Degré(s):
+    _errAccents("Degré", "degre")
+def degrés(s):
+    _errAccents("degrés", "degre")
+def Degrés(s):
+    _errAccents("Degrés", "degre")
+
 def listeVoisins(s):
     """ retourne la liste des voisins du sommet s
     Exemple d'utilisation :
@@ -201,6 +403,15 @@ def listeVoisins(s):
         elif a.end == s:
             v.append (a.start)
     return v
+
+def listevoisins(G):
+    _errMaj("listevoisins", "listeVoisins")
+def ListeVoisins(G):
+    _errMaj("ListeVoisins", "listeVoisins")
+def listeVoisin(G):
+    _errS("listeVoisin", "listeVoisins")
+def listevoisin(G):
+    _errS("listevoisin", "listeVoisins")
 
 def voisinNumero(s, i):
     return listeVoisins(s)[i]
@@ -830,6 +1041,15 @@ def ouvrirGraphe(nom):
     #print("fini")
     return g
 
+def ouvrirgraphe(nom):
+    _errMaj("ouvrirgraphe", "ouvrirGraphe")
+def OuvrirGraphe(nom):
+    _errMaj("OuvrirGraphe", "ouvrirGraphe")
+def ouvrirGraphes(nom):
+    _errS("ouvrirGraphes", "ouvrirGraphe")
+def OuvrirGraphes(nom):
+    _errS("OuvrirGraphes", "ouvrirGraphe")
+
 def ecrireGraphe(G, nom):
     """ sauvegarde le graphe G dans le fichier nom
     Exemple d'utilisation :
@@ -1165,7 +1385,7 @@ icosaedre = construireGraphe (
     __prefixer (_icosaedre (), 's'), 'icosaedre')
 icosaedre.drawopts = 'edge [len = 2]'
 
-graphesPlanairesReguliers = [tetraedre, cube, octaedre, dodecaedre, icosaedre]
+_graphesPlanairesReguliers = [tetraedre, cube, octaedre, dodecaedre, icosaedre]
 
 
 #print("bibgraphes.py")
