@@ -387,7 +387,8 @@ class ObjectEncoder:
         new_obj.append(str(l))
         new_obj.append(str(h))
         s = myIO()
-        dat.save(s, "png")
+        dat2 = dat.resize((l*4, h*4))
+        dat2.save(s, "png")
         new_obj.append("image/png;base64," + (base64.b64encode(s.getvalue())).decode("ASCII"))
         return
 
