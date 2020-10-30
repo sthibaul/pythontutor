@@ -3896,7 +3896,9 @@ function(objID, stepNum, d3DomElement, isTopLevel) {
     assert(obj.length == 6);
     d3DomElement.append('<div class="typeLabel">Image ' + typeLabelPrefix + obj[1] + '</div>');
 
-    d3DomElement.append('<table class="customObjTbl"><tr><td class="customObjElt">' + obj[2] + " " + obj[3] + "x" + obj[4] + '<br/><img src="data:' + obj[5] + '" width=' + obj[3] + ' height=' + obj[4] + ' /></td></tr></table>');
+    d3DomElement.append('<table class="customObjTbl"><tr><td class="customObjElt">' + obj[2] + " " + obj[3] + "x" + obj[4] + '<br/><img src="data:' + obj[5] + '"'
+//' width=' + (obj[3]*2) + ' height=' + (obj[4]*2) + 
+                 +' /></td></tr></table>');
   }
   else {
     // render custom data type
