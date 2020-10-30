@@ -4,12 +4,12 @@ import PIL.Image
 
 try:
     import isnotebook
-    is_notebook = isnotebook.isnotebook()
-    if is_notebook:
+    _is_notebook = isnotebook.isnotebook()
+    if _is_notebook:
         print("is notebook")
         import IPython.display
 except Exception:
-    is_notebook = False
+    _is_notebook = False
 
 
 
@@ -59,13 +59,31 @@ def __verif_type_couleur(c):
     if c[2].__class__.__name__ != 'int':
         raise __ErreurParametre(c, "une couleur avec 3 composantes entières")
 
+def _errMaj(wrong, right):
+    raise Exception("Attention aux majuscules/minuscules: la fonction " + wrong + " n'existe pas, c'est la fonction " + right + " qui existe")
+
+def _errS(wrong, right):
+    raise Exception("Attention aux s: la fonction " + wrong + " n'existe pas, c'est la fonction " + right + " qui existe")
+
 def ouvrirImage(nom):
     """ Ouvre le fichier nom et retourne l’image contenue dedans
     Par exemple:
 
     >>> img = ouvrirImage('teapot.png')"""
     __verif_type_chaine(nom)
-    return PIL.Image.open(nom).convert("RGB")
+    try:
+        return PIL.Image.open(nom).convert("RGB")
+    except FileNotFoundError as e:
+        raise Exception("Attention, le fichier " + nom + " n'existe pas, peut-être le nom est mal écrit, ou bien ce fichier n'est pas dans le même répertoire que le fichier .py ?")
+
+def ouvririmage(nom):
+    _errMaj("ouvririmage", "ouvrirImage")
+def OuvrirImage(nom):
+    _errMaj("OuvrirImage", "ouvrirImage")
+def ouvrirImages(nom):
+    _errS("ouvrirImages", "ouvrirImage")
+def ouvririmages(nom):
+    _errS("ouvririmages", "ouvrirImage")
 
 def ecrireImage(img, nom):
     """Sauvegarde l’image img dans le fichier nom
@@ -76,6 +94,15 @@ def ecrireImage(img, nom):
     __verif_type_chaine(nom)
     PIL.Image.Image.save(img, nom)
 
+def ecrireimage(img, nom):
+    _errMaj("ecrireimage", "ecrireImage")
+def EcrireImage(img, nom):
+    _errMaj("EcrireImage", "ecrireImage")
+def ecrireImages(img, nom):
+    _errS("ecrireImages", "ecrireImage")
+def ecrireimages(img, nom):
+    _errS("ecrireimages", "ecrireImage")
+
 def nouvelleImage(largeur, hauteur):
     """ Retourne une image de taille largeur × hauteur, initialement noire
     Par exemple:
@@ -85,6 +112,15 @@ def nouvelleImage(largeur, hauteur):
     __verif_type_entier(hauteur)
     return PIL.Image.new ("RGB", (largeur, hauteur))
 
+def nouvelleimage(largeur, hauteur):
+    _errMaj("nouvelleimage", "nouvelleImage")
+def NouvelleImage(largeur, hauteur):
+    _errMaj("NouvelleImage", "nouvelleImage")
+def nouvelleImages(largeur, hauteur):
+    _errS("nouvelleImages", "nouvelleImage")
+def nouvelleimages(largeur, hauteur):
+    _errS("nouvelleimages", "nouvelleImage")
+
 def afficherImage(img):
     """ Affiche l’image img
     Par exemple:
@@ -92,12 +128,21 @@ def afficherImage(img):
     >>> afficherImage(img)"""
     __verif_type_image(img)
     try:
-        if is_notebook:
+        if _is_notebook:
             IPython.display.display(img)
         else:
             PIL.Image.Image.show(img)
     except Exception:
     	print("Affichage non disponible")
+
+def afficherimage(img):
+    _errMaj("afficherimage", "afficherImage")
+def AfficherImage(img):
+    _errMaj("AfficherImage", "afficherImage")
+def afficherImages(img):
+    _errS("afficherImages", "afficherImage")
+def afficherimages(img):
+    _errS("afficherimages", "afficherImage")
 
 def largeurImage(img):
     """ Récupère la largeur de img
@@ -107,6 +152,15 @@ def largeurImage(img):
     __verif_type_image(img)
     return img.width
 
+def largeurimage(img):
+    _errMaj("largeurimage", "largeurImage")
+def LargeurImage(img):
+    _errMaj("LargeurImage", "largeurImage")
+def largeurImages(img):
+    _errS("largeurImages", "largeurImage")
+def largeurimages(img):
+    _errS("largeurimages", "largeurImage")
+
 def hauteurImage(img):
     """ Récupère la hauteur de img
     Par exemple:
@@ -114,6 +168,15 @@ def hauteurImage(img):
     >>> h = hauteurImage(img)"""
     __verif_type_image(img)
     return img.height
+
+def hauteurimage(img):
+    _errMaj("hauteurimage", "hauteurImage")
+def HauteurImage(img):
+    _errMaj("HauteurImage", "hauteurImage")
+def hauteurImages(img):
+    _errS("hauteurImages", "hauteurImage")
+def hauteurimages(img):
+    _errS("hauteurimages", "hauteurImage")
 
 
 def colorierPixel(img, x,y, couleur):
@@ -128,6 +191,15 @@ def colorierPixel(img, x,y, couleur):
     __verif_type_couleur(couleur)
     img.putpixel((x,y), couleur)
 
+def colorierpixel(img):
+    _errMaj("colorierpixel", "colorierPixel")
+def ColorierPixel(img):
+    _errMaj("ColorierPixel", "colorierPixel")
+def colorierPixels(img):
+    _errS("colorierPixels", "colorierPixel")
+def colorierpixels(img):
+    _errS("colorierpixels", "colorierPixel")
+
 def couleurPixel (img, x,y):
     """ Retourne la couleur du pixel (x, y) dans l’image img
     Exemple d'utilisation :
@@ -139,5 +211,13 @@ def couleurPixel (img, x,y):
     __verif_type_entier(y)
     return img.getpixel((x,y))
     
+def couleurpixel(img):
+    _errMaj("couleurpixel", "couleurPixel")
+def CouleurPixel(img):
+    _errMaj("CouleurPixel", "couleurPixel")
+def couleurPixels(img):
+    _errS("couleurPixels", "couleurPixel")
+def couleurpixels(img):
+    _errS("couleurpixels", "couleurPixel")
     
 #print("bibimages.py")
