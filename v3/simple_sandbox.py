@@ -85,8 +85,8 @@ class SandboxExecutor(bdb.Bdb):
           # memory bombs such as:
           #   x = 2
           #   while True: x = x*x
-          resource.setrlimit(resource.RLIMIT_AS, (200000000, 200000000))
-          resource.setrlimit(resource.RLIMIT_CPU, (5, 5))
+          resource.setrlimit(resource.RLIMIT_AS, (400000000, 400000000))
+          resource.setrlimit(resource.RLIMIT_CPU, (20, 20))
 
           # protect against unauthorized filesystem accesses ...
           resource.setrlimit(resource.RLIMIT_NOFILE, (0, 0)) # no opened files allowed
