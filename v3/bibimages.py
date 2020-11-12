@@ -110,6 +110,10 @@ def nouvelleImage(largeur, hauteur):
     >>> img = nouvelleImage(300,200)"""
     __verif_type_entier(largeur)
     __verif_type_entier(hauteur)
+    if largeur > 36:
+        raise Exception("Image trop large, le maximum autorisé est 36, pour éviter que ce soit trop lourd")
+    if hauteur > 30:
+        raise Exception("Image trop haute, le maximum autorisé est 30, pour éviter que ce soit trop lourd")
     return PIL.Image.new ("RGB", (largeur, hauteur))
 
 def nouvelleimage(largeur, hauteur):
