@@ -432,7 +432,8 @@ def __restricted_import__(*args):
 
 # VERY IMPORTANT -- set random seed to 0 to ensure deterministic execution:
 import random
-random.seed(0)
+# That's important only when using input. We don't use it, but we do use randrange() in our exercices, so we need it to be really random
+#random.seed(0)
 
 # queue of input strings passed from either raw_input or mouse_input
 input_string_queue = []
