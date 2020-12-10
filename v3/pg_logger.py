@@ -276,6 +276,30 @@ listeVariablesExclude=[
 
 "bibcsv",
 "ouvrirCSV",
+
+"paretovariate",
+"shuffle",
+"randrange",
+"betavariate",
+"normalvariate",
+"sample",
+"seed",
+"weibullvariate",
+"randint",
+"vonmisesvariate",
+"gammavariate",
+"uniform",
+"expovariate",
+"getrandbits",
+"setstate",
+"lognormvariate",
+"SystemRandom",
+"triangular",
+"gausse",
+"gauss",
+"choice",
+"getstate",
+"Random",
 ]
 
 
